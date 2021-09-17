@@ -6,8 +6,6 @@ use sp_runtime::{
     MultiSignature, OpaqueExtrinsic,
 };
 
-pub mod assets;
-
 /// An index to a block.
 pub type BlockNumber = u32;
 
