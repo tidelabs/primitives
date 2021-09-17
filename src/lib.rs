@@ -33,6 +33,9 @@ pub type Moment = u64;
 /// Index of a transaction in the chain.
 pub type Index = u32;
 
+/// Represent a Wrapped Asset.
+pub type AssetId = u32;
+
 /// A hash of some data used by the chain.
 pub type Hash = sp_core::H256;
 
