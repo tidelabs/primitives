@@ -8,6 +8,11 @@ use sp_core::RuntimeDebug;
 pub enum AssetId {
     /// TIDE native currency of the chain
     TIDE,
-    /// Currency Code Iso 4217, example: ETH, BTC, USD, USDT etc..
-    Wrapr(String),
+    /// Generic enumerated asset
+    /// Range 0 - 0x00000000FFFFFFFF (2^32)-1 is reserved for protected tokens
+    /// the values under 1000 are used for ISO 4217 Numeric Curency codes
+    ///
+    /// FIXME: Build an official enum list, (don't need to be builtin the runtime)
+    /// but can be consumed by the client, so the ID always match.
+    Wrapr(u64),
 }
