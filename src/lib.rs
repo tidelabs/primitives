@@ -1,10 +1,16 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
+use codec::{Decode, Encode};
 use sp_runtime::{
     generic,
     traits::{BlakeTwo256, IdentifyAccount, Verify},
     MultiSignature, OpaqueExtrinsic,
 };
+
+pub mod assets;
+
+#[cfg(feature = "std")]
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 /// An index to a block.
 pub type BlockNumber = u32;
@@ -55,6 +61,7 @@ pub type BlockId = generic::BlockId<Block>;
 /// GRANDPA. Any rewards for misbehavior reporting will be paid out to this
 /// account.
 pub mod report {
+
     use frame_system::offchain::AppCrypto;
     use sp_core::crypto::{key_types, KeyTypeId};
 
@@ -82,4 +89,39 @@ pub mod report {
         type GenericPublic = sp_core::sr25519::Public;
         type GenericSignature = sp_core::sr25519::Signature;
     }
+}
+
+#[derive(Eq, PartialEq, Encode, Decode, Default)]
+#[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
+#[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
+pub struct BalanceInfo {
+    #[cfg_attr(
+        feature = "std",
+        serde(bound(serialize = "Balance: std::fmt::Display"))
+    )]
+    #[cfg_attr(feature = "std", serde(serialize_with = "serialize_as_string"))]
+    #[cfg_attr(
+        feature = "std",
+        serde(bound(deserialize = "Balance: std::str::FromStr"))
+    )]
+    #[cfg_attr(feature = "std", serde(deserialize_with = "deserialize_from_string"))]
+    pub amount: Balance,
+}
+
+// Serializable Balance
+#[cfg(feature = "std")]
+fn serialize_as_string<S: Serializer, T: std::fmt::Display>(
+    t: &T,
+    serializer: S,
+) -> core::result::Result<S::Ok, S::Error> {
+    serializer.serialize_str(&t.to_string())
+}
+
+#[cfg(feature = "std")]
+fn deserialize_from_string<'de, D: Deserializer<'de>, T: std::str::FromStr>(
+    deserializer: D,
+) -> core::result::Result<T, D::Error> {
+    let s = String::deserialize(deserializer)?;
+    s.parse::<T>()
+        .map_err(|_| serde::de::Error::custom("Parse from string failed"))
 }
