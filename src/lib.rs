@@ -7,6 +7,8 @@ use sp_runtime::{
     MultiSignature, OpaqueExtrinsic,
 };
 
+use frame_support::inherent::Vec;
+
 pub mod assets;
 
 #[cfg(feature = "std")]
