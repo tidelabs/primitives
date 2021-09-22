@@ -57,6 +57,67 @@ pub type Block = generic::Block<Header, OpaqueExtrinsic>;
 /// Block ID.
 pub type BlockId = generic::BlockId<Block>;
 
+/// The ID of a withdrawal request.
+pub type WithdrawalId = u32;
+
+/// Withdrawal status.
+#[derive(Eq, PartialEq, Encode, Decode)]
+#[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
+#[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
+pub enum WithdrawalStatus {
+    Pending,
+    Cancelled,
+    Approved,
+    Rejected,
+}
+
+/// withdrawal details.
+#[derive(Eq, PartialEq, Encode, Decode)]
+#[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
+#[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
+pub struct Withdrawal<AccountId, AssetId, Balance, BlockNumber> {
+    /// Status of the withdrawal.
+    pub status: WithdrawalStatus,
+    /// Account ID requesting the withdrawal.
+    pub account_id: AccountId,
+    /// The Asset ID to widthdraw.
+    pub asset_id: AssetId,
+    /// The amount of the asset to widthdraw.
+    pub amount: Balance,
+    /// The block ID the withdrawal request is in.
+    pub block_number: BlockNumber,
+}
+
+pub mod pallet {
+    use super::{Withdrawal, WithdrawalId};
+    use frame_support::inherent::Vec;
+    /// Quorum traits to share with pallets.
+    pub trait QuorumExt<AccountId, AssetId, Balance, BlockNumber> {
+        /// Get current Quprum status.
+        fn is_quorum_enabled() -> bool;
+
+        /// Update Quorum status. All new request to the Quorum pallet will failed till the Quprum is restarted.
+        fn set_quorum_status(is_enabled: bool);
+
+        /// Get the list of the last X non-acknowledged withdrawals.
+        fn pending_withdrawals(
+            count: u8,
+        ) -> Vec<(
+            WithdrawalId,
+            Withdrawal<AccountId, AssetId, Balance, BlockNumber>,
+        )>;
+
+        /// Add a new withdrawl request to the queue.
+        fn add_new_withdrawal_in_queue(
+            account_id: AccountId,
+            asset_id: AssetId,
+            amount: Balance,
+        ) -> WithdrawalId;
+    }
+
+    pub trait WraprExt<AccountId, AssetId, Balance> {}
+}
+
 /// App-specific crypto used for reporting equivocation/misbehavior in BABE and
 /// GRANDPA. Any rewards for misbehavior reporting will be paid out to this
 /// account.
