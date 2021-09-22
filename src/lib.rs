@@ -151,7 +151,7 @@ pub struct Stake<AccountId, Balance, BlockNumber> {
 }
 
 pub mod pallet {
-    use super::{RequestId, Stake, Trade, Withdrawal};
+    use super::{CurrencyId, RequestId, Stake, Trade, Withdrawal};
     use frame_support::inherent::Vec;
     /// Quorum traits to share with pallets.
     pub trait QuorumExt<AccountId, Balance, BlockNumber> {
