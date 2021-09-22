@@ -50,15 +50,18 @@ pub type Timestamp = u64;
 
 /// Digest item type.
 pub type DigestItem = generic::DigestItem<Hash>;
+
 /// Header type.
 pub type Header = generic::Header<BlockNumber, BlakeTwo256>;
+
 /// Block type.
 pub type Block = generic::Block<Header, OpaqueExtrinsic>;
+
 /// Block ID.
 pub type BlockId = generic::BlockId<Block>;
 
 /// The ID of a withdrawal request.
-pub type WithdrawalId = u32;
+pub type RequestId = u32;
 
 /// Withdrawal status.
 #[derive(Eq, PartialEq, Encode, Decode, Clone)]
@@ -71,7 +74,7 @@ pub enum WithdrawalStatus {
     Rejected,
 }
 
-/// withdrawal details.
+/// Withdrawal details.
 #[derive(Eq, PartialEq, Encode, Decode, Clone)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
@@ -88,24 +91,75 @@ pub struct Withdrawal<AccountId, AssetId, Balance, BlockNumber> {
     pub block_number: BlockNumber,
 }
 
+/// Trade status.
+#[derive(Eq, PartialEq, Encode, Decode, Clone)]
+#[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
+#[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
+pub enum TradeStatus {
+    Pending,
+    Cancelled,
+    Approved,
+    Rejected,
+}
+
+/// Trade details.
+#[derive(Eq, PartialEq, Encode, Decode, Clone)]
+#[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
+#[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
+pub struct Trade<AccountId, AssetId, Balance, BlockNumber> {
+    /// Account ID of the trade.
+    pub account_id: AccountId,
+    /// Asset ID of the trade.
+    pub token_from: AssetId,
+    /// Asset ID to the trade.
+    pub token_to: AssetId,
+    /// Amount from
+    pub amount_from: Balance,
+    /// Amount to
+    pub amount_to: Balance,
+    /// Trade status
+    pub status: TradeStatus,
+    /// The block ID the trade request is in.
+    pub block_number: BlockNumber,
+}
+
+/// Stake status.
+#[derive(Eq, PartialEq, Encode, Decode, Clone)]
+#[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
+#[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
+pub enum StakeStatus {
+    Pending,
+    Cancelled,
+    Approved,
+    Rejected,
+}
+
+/// Stake details.
+#[derive(Eq, PartialEq, Encode, Decode, Clone)]
+#[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
+#[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
+pub struct Stake<AccountId, AssetId, Balance, BlockNumber> {
+    /// Account ID requesting the withdrawal.
+    pub account_id: AccountId,
+    /// The Asset ID to widthdraw.
+    pub asset_id: AssetId,
+    /// The amount of the asset to stake.
+    pub amount: Balance,
+    /// The duration of the stake.
+    pub duration: u32,
+    /// The block ID the stake request is in.
+    pub block_number: BlockNumber,
+}
+
 pub mod pallet {
-    use super::{Withdrawal, WithdrawalId};
-    use frame_support::inherent::Vec;
+    use super::{RequestId, Stake, Trade, Withdrawal};
     /// Quorum traits to share with pallets.
     pub trait QuorumExt<AccountId, AssetId, Balance, BlockNumber> {
-        /// Get current Quprum status.
+        /// Get current Quorum status.
         fn is_quorum_enabled() -> bool;
 
         /// Update Quorum status. All new request to the Quorum pallet will failed till the Quprum is restarted.
         fn set_quorum_status(is_enabled: bool);
-
-        /// Get the list of the last X non-acknowledged withdrawals.
-        fn pending_withdrawals(
-            count: u8,
-        ) -> Vec<(
-            WithdrawalId,
-            Withdrawal<AccountId, AssetId, Balance, BlockNumber>,
-        )>;
 
         /// Add a new withdrawl request to the queue.
         fn add_new_withdrawal_in_queue(
@@ -113,9 +167,26 @@ pub mod pallet {
             asset_id: AssetId,
             amount: Balance,
         ) -> (
-            WithdrawalId,
+            RequestId,
             Withdrawal<AccountId, AssetId, Balance, BlockNumber>,
         );
+
+        /// Add a new trade request to the queue.
+        fn add_new_trade_in_queue(
+            account_id: AccountId,
+            asset_id_from: AssetId,
+            amount_from: Balance,
+            asset_id_to: AssetId,
+            amount_to: Balance,
+        ) -> (RequestId, Trade<AccountId, AssetId, Balance, BlockNumber>);
+
+        /// Add a new stake request to the queue.
+        fn add_new_stake_in_queue(
+            account_id: AccountId,
+            asset_id: AssetId,
+            amount: Balance,
+            duration: u32,
+        ) -> (RequestId, Stake<AccountId, AssetId, Balance, BlockNumber>);
     }
 
     pub trait WraprExt<AccountId, AssetId, Balance> {}
