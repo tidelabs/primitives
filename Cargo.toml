@@ -8,6 +8,7 @@ edition = "2018"
 serde = { version = "1.0.101", optional = true }
 codec = { package = "parity-scale-codec", version = "2.2.0", default-features = false, features = ["derive"] }
 frame-system = { default-features = false, git = "https://tributary.semantic-network.tech/semnet/tidefi/back/substrate", branch = "tidefi-1.0.0" }
+frame-support = { default-features = false, git = "https://tributary.semantic-network.tech/semnet/tidefi/back/substrate", branch = "tidefi-1.0.0" }
 sp-core = { default-features = false, git = "https://tributary.semantic-network.tech/semnet/tidefi/back/substrate", branch = "tidefi-1.0.0" }
 sp-runtime = { default-features = false, git = "https://tributary.semantic-network.tech/semnet/tidefi/back/substrate", branch = "tidefi-1.0.0" }
 sp-application-crypto = { default-features = false, git = "https://tributary.semantic-network.tech/semnet/tidefi/back/substrate", branch = "tidefi-1.0.0" }
