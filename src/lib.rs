@@ -1,13 +1,12 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
 use codec::{Decode, Encode};
+use frame_support::inherent::Vec;
 use sp_runtime::{
     generic,
     traits::{BlakeTwo256, IdentifyAccount, Verify},
-    MultiSignature, OpaqueExtrinsic,
+    MultiSignature, OpaqueExtrinsic, RuntimeDebug,
 };
-
-use frame_support::inherent::Vec;
 
 pub mod assets;
 
@@ -64,6 +63,13 @@ pub type BlockId = generic::BlockId<Block>;
 
 /// The ID of a withdrawal request.
 pub type RequestId = u32;
+
+#[derive(Encode, Decode, Eq, PartialEq, Copy, Clone, RuntimeDebug, PartialOrd, Ord)]
+#[cfg_attr(feature = "std", derive(Serialize, Deserialize, Hash))]
+pub enum CurrencyId {
+    Tide,
+    Wrapped(AssetId),
+}
 
 /// Withdrawal status.
 #[derive(Eq, PartialEq, Encode, Decode, Clone)]
