@@ -125,17 +125,6 @@ pub struct Trade<AccountId, AssetId, Balance, BlockNumber> {
     pub block_number: BlockNumber,
 }
 
-/// Stake status.
-#[derive(Eq, PartialEq, Encode, Decode, Clone)]
-#[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
-#[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
-pub enum StakeStatus {
-    Pending,
-    Cancelled,
-    Approved,
-    Rejected,
-}
-
 /// Stake details.
 #[derive(Eq, PartialEq, Encode, Decode, Clone)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
