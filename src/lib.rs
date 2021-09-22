@@ -86,13 +86,13 @@ pub enum WithdrawalStatus {
 #[derive(Eq, PartialEq, Encode, Decode, Clone)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
-pub struct Withdrawal<AccountId, AssetId, Balance, BlockNumber> {
+pub struct Withdrawal<AccountId, Balance, BlockNumber> {
     /// Status of the withdrawal.
     pub status: WithdrawalStatus,
     /// Account ID requesting the withdrawal.
     pub account_id: AccountId,
     /// The Asset ID to widthdraw.
-    pub asset_id: AssetId,
+    pub asset_id: CurrencyId,
     /// The amount of the asset to widthdraw.
     pub amount: Balance,
     /// The address on the AssetID chain where to send the funds.
@@ -116,15 +116,15 @@ pub enum TradeStatus {
 #[derive(Eq, PartialEq, Encode, Decode, Clone)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
-pub struct Trade<AccountId, AssetId, Balance, BlockNumber> {
+pub struct Trade<AccountId, Balance, BlockNumber> {
     /// Account ID of the trade.
     pub account_id: AccountId,
     /// Asset ID of the trade.
-    pub token_from: AssetId,
-    /// Asset ID to the trade.
-    pub token_to: AssetId,
+    pub token_from: CurrencyId,
     /// Amount from
     pub amount_from: Balance,
+    /// Asset ID to the trade.
+    pub token_to: CurrencyId,
     /// Amount to
     pub amount_to: Balance,
     /// Trade status
@@ -137,11 +137,11 @@ pub struct Trade<AccountId, AssetId, Balance, BlockNumber> {
 #[derive(Eq, PartialEq, Encode, Decode, Clone)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
-pub struct Stake<AccountId, AssetId, Balance, BlockNumber> {
+pub struct Stake<AccountId, Balance, BlockNumber> {
     /// Account ID requesting the withdrawal.
     pub account_id: AccountId,
     /// The Asset ID to widthdraw.
-    pub asset_id: AssetId,
+    pub asset_id: CurrencyId,
     /// The amount of the asset to stake.
     pub amount: Balance,
     /// The duration of the stake.
@@ -154,7 +154,7 @@ pub mod pallet {
     use super::{RequestId, Stake, Trade, Withdrawal};
     use frame_support::inherent::Vec;
     /// Quorum traits to share with pallets.
-    pub trait QuorumExt<AccountId, AssetId, Balance, BlockNumber> {
+    pub trait QuorumExt<AccountId, Balance, BlockNumber> {
         /// Get current Quorum status.
         fn is_quorum_enabled() -> bool;
 
@@ -164,33 +164,30 @@ pub mod pallet {
         /// Add a new withdrawl request to the queue.
         fn add_new_withdrawal_in_queue(
             account_id: AccountId,
-            asset_id: AssetId,
+            asset_id: CurrencyId,
             amount: Balance,
             external_address: Vec<u8>,
-        ) -> (
-            RequestId,
-            Withdrawal<AccountId, AssetId, Balance, BlockNumber>,
-        );
+        ) -> (RequestId, Withdrawal<AccountId, Balance, BlockNumber>);
 
         /// Add a new trade request to the queue.
         fn add_new_trade_in_queue(
             account_id: AccountId,
-            asset_id_from: AssetId,
+            asset_id_from: CurrencyId,
             amount_from: Balance,
-            asset_id_to: AssetId,
+            asset_id_to: CurrencyId,
             amount_to: Balance,
-        ) -> (RequestId, Trade<AccountId, AssetId, Balance, BlockNumber>);
+        ) -> (RequestId, Trade<AccountId, Balance, BlockNumber>);
 
         /// Add a new stake request to the queue.
         fn add_new_stake_in_queue(
             account_id: AccountId,
-            asset_id: AssetId,
+            asset_id: CurrencyId,
             amount: Balance,
             duration: u32,
-        ) -> (RequestId, Stake<AccountId, AssetId, Balance, BlockNumber>);
+        ) -> (RequestId, Stake<AccountId, Balance, BlockNumber>);
     }
 
-    pub trait WraprExt<AccountId, AssetId, Balance> {}
+    pub trait WraprExt<AccountId, Balance> {}
 }
 
 /// App-specific crypto used for reporting equivocation/misbehavior in BABE and
