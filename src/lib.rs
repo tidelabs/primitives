@@ -87,6 +87,8 @@ pub struct Withdrawal<AccountId, AssetId, Balance, BlockNumber> {
     pub asset_id: AssetId,
     /// The amount of the asset to widthdraw.
     pub amount: Balance,
+    /// The address on the AssetID chain where to send the funds.
+    pub external_address: Balance,
     /// The block ID the withdrawal request is in.
     pub block_number: BlockNumber,
 }
