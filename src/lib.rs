@@ -112,7 +112,10 @@ pub mod pallet {
             account_id: AccountId,
             asset_id: AssetId,
             amount: Balance,
-        ) -> WithdrawalId;
+        ) -> (
+            WithdrawalId,
+            Withdrawal<AccountId, AssetId, Balance, BlockNumber>,
+        );
     }
 
     pub trait WraprExt<AccountId, AssetId, Balance> {}
