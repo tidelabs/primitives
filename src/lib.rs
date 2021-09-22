@@ -61,7 +61,7 @@ pub type BlockId = generic::BlockId<Block>;
 pub type WithdrawalId = u32;
 
 /// Withdrawal status.
-#[derive(Eq, PartialEq, Encode, Decode)]
+#[derive(Eq, PartialEq, Encode, Decode, Clone)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
 pub enum WithdrawalStatus {
@@ -72,7 +72,7 @@ pub enum WithdrawalStatus {
 }
 
 /// withdrawal details.
-#[derive(Eq, PartialEq, Encode, Decode)]
+#[derive(Eq, PartialEq, Encode, Decode, Clone)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
 pub struct Withdrawal<AccountId, AssetId, Balance, BlockNumber> {
