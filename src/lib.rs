@@ -133,25 +133,8 @@ pub struct Trade<AccountId, BlockNumber> {
     pub block_number: BlockNumber,
 }
 
-/// Stake details.
-#[derive(Eq, PartialEq, Encode, Decode, Clone)]
-#[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
-#[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
-pub struct Stake<AccountId, BlockNumber> {
-    /// Account ID requesting the withdrawal.
-    pub account_id: AccountId,
-    /// The Asset ID to widthdraw.
-    pub asset_id: CurrencyId,
-    /// The amount of the asset to stake.
-    pub amount: Balance,
-    /// The duration of the stake.
-    pub duration: u32,
-    /// The block ID the stake request is in.
-    pub block_number: BlockNumber,
-}
-
 pub mod pallet {
-    use super::{Balance, CurrencyId, RequestId, Stake, Trade, Withdrawal};
+    use super::{Balance, CurrencyId, RequestId, Trade, Withdrawal};
     use frame_support::inherent::Vec;
     /// Quorum traits to share with pallets.
     pub trait QuorumExt<AccountId, BlockNumber> {
@@ -177,14 +160,6 @@ pub mod pallet {
             asset_id_to: CurrencyId,
             amount_to: Balance,
         ) -> (RequestId, Trade<AccountId, BlockNumber>);
-
-        /// Add a new stake request to the queue.
-        fn add_new_stake_in_queue(
-            account_id: AccountId,
-            asset_id: CurrencyId,
-            amount: Balance,
-            duration: u32,
-        ) -> (RequestId, Stake<AccountId, BlockNumber>);
     }
 
     pub trait WraprExt<AccountId> {}
