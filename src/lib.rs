@@ -133,6 +133,19 @@ pub struct Trade<AccountId, BlockNumber> {
     pub block_number: BlockNumber,
 }
 
+/// Stake details.
+#[derive(Eq, PartialEq, Encode, Decode, Clone)]
+#[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
+#[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
+pub struct Stake<Balance> {
+    /// Principal balance (with accrued interest)
+    pub principal: Balance,
+    /// Initial balance
+    pub initial_balance: Balance,
+    /// Duration of the stake
+    pub duration: u32,
+}
+
 pub mod pallet {
     use super::{Balance, CurrencyId, RequestId, Trade, Withdrawal};
     use frame_support::inherent::Vec;
