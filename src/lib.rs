@@ -70,6 +70,13 @@ pub enum CurrencyId {
     Tide,
     Wrapped(AssetId),
 }
+// default implementation but shouldn't be used please!
+// it's required for the substrate storage
+impl Default for CurrencyId {
+    fn default() -> Self {
+        CurrencyId::Tide
+    }
+}
 
 /// Withdrawal status.
 #[derive(Eq, PartialEq, Encode, Decode, Clone)]
@@ -134,7 +141,7 @@ pub struct Trade<AccountId, BlockNumber> {
 }
 
 /// Stake details.
-#[derive(Eq, PartialEq, Encode, Decode, Clone)]
+#[derive(Eq, PartialEq, Encode, Decode, Clone, Default)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
 pub struct Stake<Balance> {
