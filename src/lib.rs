@@ -145,8 +145,6 @@ pub struct Trade<AccountId, BlockNumber> {
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
 pub struct Stake<Balance> {
-    /// The staked CurrencyId
-    pub currency_id: CurrencyId,
     /// Principal balance (with accrued interest)
     pub principal: Balance,
     /// Initial balance
