@@ -189,6 +189,8 @@ pub mod pallet {
 
     /// Oracle traits to share with pallets.
     pub trait OracleExt<AccountId, BlockNumber> {
+        /// Get current Quorum status.
+        fn is_oracle_enabled() -> bool;
         /// Get current currency status.
         fn is_currency_enabled(currency_id: CurrencyId) -> bool;
         /// Add a new trade request to the queue.
