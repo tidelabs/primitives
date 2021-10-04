@@ -1,7 +1,7 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
 use codec::{Decode, Encode};
-use frame_support::inherent::Vec;
+use scale_info::prelude::{string::String, vec::Vec};
 use sp_runtime::{
     generic,
     traits::{BlakeTwo256, IdentifyAccount, Verify},
@@ -173,7 +173,7 @@ pub struct CurrencyMetadata<Balance> {
 
 pub mod pallet {
     use super::{Balance, CurrencyId, RequestId, Trade, Withdrawal};
-    use frame_support::inherent::Vec;
+    use scale_info::prelude::vec::Vec;
     /// Quorum traits to share with pallets.
     pub trait QuorumExt<AccountId, BlockNumber> {
         /// Get current Quorum status.
