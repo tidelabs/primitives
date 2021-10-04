@@ -9,6 +9,7 @@ use sp_runtime::{
 };
 
 pub mod assets;
+pub use assets::BTC;
 
 #[cfg(feature = "std")]
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
@@ -153,6 +154,23 @@ pub struct Stake<Balance> {
     pub duration: u32,
 }
 
+/// Currency metadata.
+#[derive(Eq, PartialEq, Encode, Decode, Clone, Default)]
+#[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
+#[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
+pub struct CurrencyMetadata<Balance> {
+    /// Name of the
+    pub name: String,
+    /// Initial balance
+    pub symbol: String,
+    /// Number of decimals for the currency
+    pub decimals: u8,
+    /// Currency is frozen on chain (can't transfer)
+    pub is_frozen: bool,
+    /// Total supply on chain for the currency
+    pub supply: Balance,
+}
+
 pub mod pallet {
     use super::{Balance, CurrencyId, RequestId, Trade, Withdrawal};
     use frame_support::inherent::Vec;
@@ -171,6 +189,12 @@ pub mod pallet {
             amount: Balance,
             external_address: Vec<u8>,
         ) -> (RequestId, Withdrawal<AccountId, BlockNumber>);
+    }
+
+    /// Oracle traits to share with pallets.
+    pub trait OracleExt<AccountId, BlockNumber> {
+        /// Get current currency status.
+        fn is_currency_enabled(currency_id: CurrencyId) -> bool;
 
         /// Add a new trade request to the queue.
         fn add_new_trade_in_queue(
