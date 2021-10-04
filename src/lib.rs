@@ -1,7 +1,7 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
 use codec::{Decode, Encode};
-use scale_info::prelude::{string::String, vec::Vec};
+use scale_info::prelude::vec::Vec;
 use sp_runtime::{
     generic,
     traits::{BlakeTwo256, IdentifyAccount, Verify},
@@ -159,10 +159,10 @@ pub struct Stake<Balance> {
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
 pub struct CurrencyMetadata<Balance> {
-    /// Name of the
-    pub name: String,
+    /// Name of the currency
+    pub name: Vec<u8>,
     /// Initial balance
-    pub symbol: String,
+    pub symbol: Vec<u8>,
     /// Number of decimals for the currency
     pub decimals: u8,
     /// Currency is frozen on chain (can't transfer)
