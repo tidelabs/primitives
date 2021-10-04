@@ -178,10 +178,6 @@ pub mod pallet {
     pub trait QuorumExt<AccountId, BlockNumber> {
         /// Get current Quorum status.
         fn is_quorum_enabled() -> bool;
-
-        /// Update Quorum status. All new request to the Quorum pallet will failed till the Quprum is restarted.
-        fn set_quorum_status(is_enabled: bool);
-
         /// Add a new withdrawl request to the queue.
         fn add_new_withdrawal_in_queue(
             account_id: AccountId,
@@ -195,7 +191,6 @@ pub mod pallet {
     pub trait OracleExt<AccountId, BlockNumber> {
         /// Get current currency status.
         fn is_currency_enabled(currency_id: CurrencyId) -> bool;
-
         /// Add a new trade request to the queue.
         fn add_new_trade_in_queue(
             account_id: AccountId,
