@@ -231,11 +231,11 @@ pub mod pallet {
         fn get_unique_id(account_id: AccountId) -> Hash;
     }
 
-    pub trait AssetRegistryExt<AccountId, BlockNumber> {
+    pub trait AssetRegistryExt<AccountId, Balance, BlockNumber> {
         /// Make sure the currency exist and is enabled
         fn is_enabled(currency_id: CurrencyId) -> bool;
         /// Get the currency metadata
-        fn get_metadata(currency_id: CurrencyId) -> Option<CurrencyMetadata>;
+        fn get_metadata(currency_id: CurrencyId) -> Option<CurrencyMetadata<Balance>>;
     }
 
     pub trait WraprExt<AccountId> {}
