@@ -235,7 +235,7 @@ pub mod pallet {
         /// Make sure the currency exist and is enabled
         fn is_enabled(currency_id: CurrencyId) -> bool;
         /// Get the currency metadata
-        fn get_metadata(currency_id: CurrencyId) -> CurrencyMetadata;
+        fn get_metadata(currency_id: CurrencyId) -> Option<CurrencyMetadata>;
     }
 
     pub trait WraprExt<AccountId> {}
