@@ -190,7 +190,7 @@ pub struct CurrencyMetadata<Balance> {
 }
 
 pub mod pallet {
-    use super::{Balance, CurrencyId, RequestId, Trade, Withdrawal};
+    use super::{Balance, CurrencyId, Hash, RequestId, Trade, Withdrawal};
     use scale_info::prelude::vec::Vec;
     /// Quorum traits to share with pallets.
     pub trait QuorumExt<AccountId, BlockNumber> {
@@ -219,6 +219,16 @@ pub mod pallet {
             asset_id_to: CurrencyId,
             amount_to: Balance,
         ) -> (RequestId, Trade<AccountId, BlockNumber>);
+    }
+
+    pub trait SecurityExt<AccountId, BlockNumber> {
+        /// Make sure the chain is running.
+        fn is_chain_running() -> bool;
+        /// Get the real block count processed when the chain was running. (Maintenance mode blocks are not calculated)
+        fn get_current_block_count() -> BlockNumber;
+        /// Generates a 256-bit unique hash from an `AccountId` and the
+        /// internal (auto-incrementing) `Nonce` to prevent replay attacks
+        fn get_unique_id(account_id: AccountId) -> Hash;
     }
 
     pub trait WraprExt<AccountId> {}
