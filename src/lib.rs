@@ -231,7 +231,7 @@ pub mod pallet {
         fn get_unique_id(account_id: AccountId) -> Hash;
     }
 
-    pub trait AssetRegistryExt<AccountId, BlockNumber> {
+    pub trait AssetRegistryExt {
         /// Make sure the currency exist and is enabled
         fn is_enabled(currency_id: CurrencyId) -> bool;
     }
