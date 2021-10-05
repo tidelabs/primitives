@@ -190,7 +190,7 @@ pub struct CurrencyMetadata<Balance> {
 }
 
 pub mod pallet {
-    use super::{Balance, CurrencyId, Hash, RequestId, Trade, Withdrawal};
+    use super::{Balance, CurrencyId, Hash, Trade, Withdrawal};
     use scale_info::prelude::vec::Vec;
     /// Quorum traits to share with pallets.
     pub trait QuorumExt<AccountId, BlockNumber> {
@@ -202,7 +202,7 @@ pub mod pallet {
             asset_id: CurrencyId,
             amount: Balance,
             external_address: Vec<u8>,
-        ) -> (RequestId, Withdrawal<AccountId, BlockNumber>);
+        ) -> (Hash, Withdrawal<AccountId, BlockNumber>);
     }
 
     /// Oracle traits to share with pallets.
@@ -218,7 +218,7 @@ pub mod pallet {
             amount_from: Balance,
             asset_id_to: CurrencyId,
             amount_to: Balance,
-        ) -> (RequestId, Trade<AccountId, BlockNumber>);
+        ) -> (Hash, Trade<AccountId, BlockNumber>);
     }
 
     pub trait SecurityExt<AccountId, BlockNumber> {
