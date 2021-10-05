@@ -209,8 +209,6 @@ pub mod pallet {
     pub trait OracleExt<AccountId, BlockNumber> {
         /// Get current Quorum status.
         fn is_oracle_enabled() -> bool;
-        /// Get current currency status.
-        fn is_currency_enabled(currency_id: CurrencyId) -> bool;
         /// Add a new trade request to the queue.
         fn add_new_trade_in_queue(
             account_id: AccountId,
@@ -233,7 +231,7 @@ pub mod pallet {
 
     pub trait AssetRegistryExt {
         /// Make sure the currency exist and is enabled
-        fn is_enabled(currency_id: CurrencyId) -> bool;
+        fn is_currency_enabled(currency_id: CurrencyId) -> bool;
     }
 
     pub trait WraprExt<AccountId> {}
