@@ -91,6 +91,12 @@ pub enum StatusCode {
     Maintenance = 1,
 }
 
+impl Default for StatusCode {
+    fn default() -> Self {
+        StatusCode::Running
+    }
+}
+
 /// Withdrawal status.
 #[derive(Eq, PartialEq, Encode, Decode, Clone)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
