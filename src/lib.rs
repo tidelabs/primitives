@@ -65,6 +65,7 @@ pub type BlockId = generic::BlockId<Block>;
 /// The ID of a withdrawal request.
 pub type RequestId = u32;
 
+/// Enum indicating the currency. Tide is the native token.
 #[derive(Encode, Decode, Eq, PartialEq, Copy, Clone, RuntimeDebug, PartialOrd, Ord)]
 #[cfg_attr(feature = "std", derive(Serialize, Deserialize, Hash))]
 pub enum CurrencyId {
@@ -77,6 +78,17 @@ impl Default for CurrencyId {
     fn default() -> Self {
         CurrencyId::Tide
     }
+}
+
+/// Enum indicating status of the chain.
+#[derive(Eq, PartialEq, Encode, Decode, Clone)]
+#[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
+#[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
+pub enum StatusCode {
+    /// Chain is fully operational.
+    Running = 0,
+    /// Chain is in maintenance and should be back soon.
+    Maintenance = 1,
 }
 
 /// Withdrawal status.
