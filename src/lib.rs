@@ -176,7 +176,7 @@ pub struct Stake<Balance> {
 #[derive(Eq, PartialEq, Encode, Decode, Clone, Default)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
-pub struct CurrencyMetadata<Balance> {
+pub struct CurrencyMetadata {
     /// Name of the currency
     pub name: Vec<u8>,
     /// Initial balance
@@ -185,8 +185,6 @@ pub struct CurrencyMetadata<Balance> {
     pub decimals: u8,
     /// Currency is frozen on chain (can't transfer)
     pub is_frozen: bool,
-    /// Total supply on chain for the currency
-    pub supply: Balance,
 }
 
 pub mod pallet {
