@@ -208,12 +208,10 @@ pub struct ActiveEraInfo<BlockNumber> {
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
 pub struct Fee {
-    /// Index of era.
+    /// Total amount before fees
     pub amount: Balance,
-    /// The block where the.
+    /// The fees at the moment of the transaction
     pub fee: Balance,
-    /// The currency
-    pub currency_id: CurrencyId,
 }
 
 pub mod pallet {
