@@ -207,7 +207,7 @@ pub struct ActiveEraInfo<BlockNumber> {
 #[derive(Eq, PartialEq, Encode, Decode, Clone, Default)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
-pub struct Fee<Balance> {
+pub struct Fee {
     /// Index of era.
     pub amount: Balance,
     /// The block where the.
