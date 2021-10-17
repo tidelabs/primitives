@@ -203,6 +203,19 @@ pub struct ActiveEraInfo<BlockNumber> {
     pub start: Option<u64>,
 }
 
+/// Information regarding a fee
+#[derive(Eq, PartialEq, Encode, Decode, Clone, Default)]
+#[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
+#[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
+pub struct Fee<Balance> {
+    /// Index of era.
+    pub amount: Balance,
+    /// The block where the.
+    pub fee: Balance,
+    /// The currency
+    pub currency_id: CurrencyId,
+}
+
 pub mod pallet {
     use super::{Balance, CurrencyId, Hash, Trade, Withdrawal};
     use scale_info::prelude::vec::Vec;
