@@ -232,6 +232,15 @@ pub mod pallet {
         fn is_currency_enabled(currency_id: CurrencyId) -> bool;
     }
 
+    pub trait FeesExt<AccountId> {
+        /// Calculate the fee to be deposited into the central wallet
+        /// You have to reduce the amount by the returned value manually and
+        /// deposit the funds into the wallet
+        fn calculate_trading_fee(currency_id: CurrencyId, amount: Balance) -> Balance;
+        /// Get the account if of the central wallet to make deposit
+        fn account_id() -> AccountId;
+    }
+
     pub trait WraprExt<AccountId> {}
 }
 
