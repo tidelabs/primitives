@@ -195,7 +195,7 @@ pub struct ActiveEraInfo<BlockNumber> {
     /// Index of era.
     pub index: EraIndex,
     /// The block where the.
-    pub start_block: Option<BlockNumber>,,
+    pub start_block: Option<BlockNumber>,
     /// Moment of start expressed as millisecond from `$UNIX_EPOCH`.
     ///
     /// Start can be none if start hasn't been set for the era yet,
