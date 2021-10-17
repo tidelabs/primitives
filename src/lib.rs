@@ -62,8 +62,8 @@ pub type Block = generic::Block<Header, OpaqueExtrinsic>;
 /// Block ID.
 pub type BlockId = generic::BlockId<Block>;
 
-/// The ID of a withdrawal request.
-pub type RequestId = u32;
+/// Counter for the number of eras that have passed.
+pub type EraIndex = u32;
 
 /// Enum indicating the currency. Tide is the native token.
 #[derive(Encode, Decode, Eq, PartialEq, Copy, Clone, RuntimeDebug, PartialOrd, Ord)]
@@ -185,6 +185,20 @@ pub struct CurrencyMetadata {
     pub decimals: u8,
     /// Currency is frozen on chain (can't transfer)
     pub is_frozen: bool,
+}
+
+/// Information regarding the active era (era in used in session).
+#[derive(Eq, PartialEq, Encode, Decode, Clone, Default)]
+#[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
+#[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
+pub struct ActiveEraInfo {
+    /// Index of era.
+    pub index: EraIndex,
+    /// Moment of start expressed as millisecond from `$UNIX_EPOCH`.
+    ///
+    /// Start can be none if start hasn't been set for the era yet,
+    /// Start is set on the first on_finalize of the era to guarantee usage of `Time`.
+    start: Option<u64>,
 }
 
 pub mod pallet {
