@@ -159,6 +159,19 @@ pub struct Trade<AccountId, BlockNumber> {
     pub block_number: BlockNumber,
 }
 
+/// Market maker trade confirmation.
+#[derive(Eq, PartialEq, Encode, Decode, Clone, Default)]
+#[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
+#[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
+pub struct TradeConfirmation<AccountId> {
+    /// Amount of the source, should be formatted with the destination currency
+    pub amount_from: Balance,
+    /// Amount of the destination, should be formatted with the destination currency
+    pub amount_to: Balance,
+    /// Where to send the source asset for the MM
+    pub destination: AccountId,
+}
+
 /// Stake details.
 #[derive(Eq, PartialEq, Encode, Decode, Clone, Default)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
