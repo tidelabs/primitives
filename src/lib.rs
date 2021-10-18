@@ -228,7 +228,7 @@ pub struct Fee {
 }
 
 pub mod pallet {
-    use super::{Balance, CurrencyId, Hash, Trade, Withdrawal};
+    use super::{Balance, CurrencyId, Fee, Hash, Trade, Withdrawal};
     use scale_info::prelude::vec::Vec;
     /// Quorum traits to share with pallets.
     pub trait QuorumExt<AccountId, BlockNumber> {
@@ -276,7 +276,17 @@ pub mod pallet {
         /// Calculate the fee to be deposited into the central wallet
         /// You have to reduce the amount by the returned value manually and
         /// deposit the funds into the wallet
-        fn calculate_trading_fee(currency_id: CurrencyId, amount: Balance) -> Balance;
+        fn calculate_trading_fees(
+            currency_id: CurrencyId,
+            total_amount_before_fees: Balance,
+        ) -> Fee;
+        /// Register a new trading fees associated with the account for the current era.
+        /// A percentage of the network profits will be re-distributed to the account at the end of the era.
+        fn register_trading_fees(
+            account_id: AccountId,
+            currency_id: CurrencyId,
+            total_amount_before_fees: Balance,
+        ) -> Fee;
         /// Get the account if of the central wallet to make deposit
         fn account_id() -> AccountId;
     }
