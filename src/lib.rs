@@ -169,7 +169,7 @@ pub struct TradeConfirmation<AccountId> {
     /// Amount of the destination, should be formatted with the destination currency, the market maker will send this amount of asset.
     pub amount_to_send: Balance,
     /// AccountId to take the destination asset from, and to send the source asset
-    pub account: AccountId,
+    pub account_id: AccountId,
 }
 
 /// Stake details.
