@@ -164,10 +164,10 @@ pub struct Trade<AccountId, BlockNumber> {
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
 pub struct TradeConfirmation<AccountId> {
-    /// Amount of the source, should be formatted with the destination currency
-    pub amount_from: Balance,
-    /// Amount of the destination, should be formatted with the destination currency
-    pub amount_to: Balance,
+    /// Amount of the source, should be formatted with the source currency, the market maker will receive this amount of asset.
+    pub amount_to_receive: Balance,
+    /// Amount of the destination, should be formatted with the destination currency, the market maker will send this amount of asset.
+    pub amount_to_send: Balance,
     /// AccountId to take the destination asset from, and to send the source asset
     pub account: AccountId,
 }
