@@ -168,8 +168,8 @@ pub struct TradeConfirmation<AccountId> {
     pub amount_from: Balance,
     /// Amount of the destination, should be formatted with the destination currency
     pub amount_to: Balance,
-    /// Where to send the source asset for the MM
-    pub destination: AccountId,
+    /// AccountId to take the destination asset from, and to send the source asset
+    pub account: AccountId,
 }
 
 /// Stake details.
