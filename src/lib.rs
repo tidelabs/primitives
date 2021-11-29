@@ -150,6 +150,8 @@ pub struct Trade<AccountId, BlockNumber> {
     pub token_from: CurrencyId,
     /// Amount from
     pub amount_from: Balance,
+    /// Amount from (currently filled -- if partial)
+    pub amount_from_filled: Balance,
     /// Asset ID to the trade.
     pub token_to: CurrencyId,
     /// Amount to (requested)
