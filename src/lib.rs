@@ -132,10 +132,15 @@ pub struct Withdrawal<AccountId, BlockNumber> {
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
 pub enum TradeStatus {
+    /// Initial status
     Pending,
+    /// Cancelled
     Cancelled,
+    /// Partially filled by market makers
     PartiallyFilled,
-    Approved,
+    /// Completed (totally filled)
+    Completed,
+    /// Something went wrong the trade has been rejected
     Rejected,
 }
 
@@ -168,7 +173,7 @@ pub struct Trade<AccountId, BlockNumber> {
 #[derive(Eq, PartialEq, Encode, Decode, Clone, Default)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
-pub struct TradeConfirmation<AccountId> {
+pub struct TradeConfirmation {
     /// Request ID of the market maker trade request, used to fulfill this trade request.
     pub request_id: Hash,
     /// Amount of the source, should be formatted with the source currency, the market maker will receive this amount of asset.
