@@ -167,12 +167,13 @@ pub struct Trade<AccountId, BlockNumber> {
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
 pub struct TradeConfirmation<AccountId> {
+    /// Request ID of the market maker trade request, used to fulfill this trade request.
+    pub request_id: Hash,
     /// Amount of the source, should be formatted with the source currency, the market maker will receive this amount of asset.
     pub amount_to_receive: Balance,
-    /// Amount of the destination, should be formatted with the destination currency, the market maker will send this amount of asset.
+    /// Amount of the destination, should be formatted with the destination currency, the market maker will send this amount of asset,
+    /// and the trade will be filled with this amount. It may provide a partial or a complete fill.
     pub amount_to_send: Balance,
-    /// AccountId to take the destination asset from, and to send the source asset. Should represent the market maker account id.
-    pub account_id: AccountId,
 }
 
 /// Stake details.
