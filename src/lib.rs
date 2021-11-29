@@ -134,6 +134,7 @@ pub struct Withdrawal<AccountId, BlockNumber> {
 pub enum TradeStatus {
     Pending,
     Cancelled,
+    PartiallyFilled,
     Approved,
     Rejected,
 }
@@ -151,8 +152,10 @@ pub struct Trade<AccountId, BlockNumber> {
     pub amount_from: Balance,
     /// Asset ID to the trade.
     pub token_to: CurrencyId,
-    /// Amount to
+    /// Amount to (requested)
     pub amount_to: Balance,
+    /// Amount to (currently filled -- if partial)
+    pub amount_to_filled: Balance,
     /// Trade status
     pub status: TradeStatus,
     /// The block ID the trade request is in.
