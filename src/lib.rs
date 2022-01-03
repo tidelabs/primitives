@@ -1,7 +1,7 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
 use codec::{Decode, Encode};
-use scale_info::prelude::vec::Vec;
+use scale_info::{prelude::{vec::Vec, string::String}, TypeInfo};
 use sp_runtime::{
     generic,
     traits::{BlakeTwo256, IdentifyAccount, Verify},
@@ -51,7 +51,7 @@ pub type Hash = sp_core::H256;
 pub type Timestamp = u64;
 
 /// Digest item type.
-pub type DigestItem = generic::DigestItem<Hash>;
+pub type DigestItem = generic::DigestItem;
 
 /// Header type.
 pub type Header = generic::Header<BlockNumber, BlakeTwo256>;
@@ -66,7 +66,7 @@ pub type BlockId = generic::BlockId<Block>;
 pub type EraIndex = u32;
 
 /// Enum indicating the currency. Tide is the native token.
-#[derive(Encode, Decode, Eq, PartialEq, Copy, Clone, RuntimeDebug, PartialOrd, Ord)]
+#[derive(Encode, Decode, TypeInfo, Eq, PartialEq, Copy, Clone, RuntimeDebug, PartialOrd, Ord)]
 #[cfg_attr(feature = "std", derive(Serialize, Deserialize, Hash))]
 pub enum CurrencyId {
     Tide,
@@ -81,7 +81,7 @@ impl Default for CurrencyId {
 }
 
 /// Enum indicating status of the chain.
-#[derive(Eq, PartialEq, Encode, Decode, Clone)]
+#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
 pub enum StatusCode {
@@ -98,7 +98,7 @@ impl Default for StatusCode {
 }
 
 /// Withdrawal status.
-#[derive(Eq, PartialEq, Encode, Decode, Clone)]
+#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
 pub enum WithdrawalStatus {
@@ -109,7 +109,7 @@ pub enum WithdrawalStatus {
 }
 
 /// Withdrawal details.
-#[derive(Eq, PartialEq, Encode, Decode, Clone)]
+#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
 pub struct Withdrawal<AccountId, BlockNumber> {
@@ -128,7 +128,7 @@ pub struct Withdrawal<AccountId, BlockNumber> {
 }
 
 /// Trade status.
-#[derive(Eq, PartialEq, Encode, Decode, Clone)]
+#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
 pub enum TradeStatus {
@@ -145,10 +145,12 @@ pub enum TradeStatus {
 }
 
 /// Trade details.
-#[derive(Eq, PartialEq, Encode, Decode, Clone)]
+#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
 pub struct Trade<AccountId, BlockNumber> {
+    /// Extrinsic hash of the initial trade request
+    pub extrinsic_hash: [u8; 32],
     /// Account ID of the trade.
     pub account_id: AccountId,
     /// Asset ID of the trade.
@@ -170,7 +172,7 @@ pub struct Trade<AccountId, BlockNumber> {
 }
 
 /// Market maker trade confirmation.
-#[derive(Eq, PartialEq, Encode, Decode, Clone, Default)]
+#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone, Default)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
 pub struct TradeConfirmation {
@@ -184,7 +186,7 @@ pub struct TradeConfirmation {
 }
 
 /// Stake details.
-#[derive(Eq, PartialEq, Encode, Decode, Clone, Default)]
+#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone, Default)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
 pub struct Stake<Balance> {
@@ -197,7 +199,7 @@ pub struct Stake<Balance> {
 }
 
 /// Currency metadata.
-#[derive(Eq, PartialEq, Encode, Decode, Clone, Default)]
+#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone, Default)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
 pub struct CurrencyMetadata {
@@ -212,7 +214,7 @@ pub struct CurrencyMetadata {
 }
 
 /// Information regarding the active era (era in used in session).
-#[derive(Eq, PartialEq, Encode, Decode, Clone, Default)]
+#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone, Default)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
 pub struct ActiveEraInfo<BlockNumber> {
@@ -228,7 +230,7 @@ pub struct ActiveEraInfo<BlockNumber> {
 }
 
 /// Information regarding a fee
-#[derive(Eq, PartialEq, Encode, Decode, Clone, Default)]
+#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone, Default)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
 pub struct Fee {
@@ -236,6 +238,19 @@ pub struct Fee {
     pub amount: Balance,
     /// The fees at the moment of the transaction
     pub fee: Balance,
+}
+
+/// Trade extrinsic with trade fee details.
+#[derive(Eq, PartialEq, TypeInfo, Clone)]
+#[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
+#[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
+pub struct TradeExtrinsic {
+    /// Signed extrinsic
+    pub extrinsic: String,
+    /// The estimated trading fee
+    pub trade_fee: Balance,
+    /// The currency the trading fees are taken
+    pub trade_fee_currency: CurrencyId,
 }
 
 pub mod pallet {
@@ -265,6 +280,8 @@ pub mod pallet {
             amount_from: Balance,
             asset_id_to: CurrencyId,
             amount_to: Balance,
+            block_number: BlockNumber,
+            extrinsic_hash: [u8; 32],
         ) -> (Hash, Trade<AccountId, BlockNumber>);
     }
 
@@ -339,7 +356,7 @@ pub mod report {
     }
 }
 
-#[derive(Eq, PartialEq, Encode, Decode, Default)]
+#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Default)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
 pub struct BalanceInfo {
