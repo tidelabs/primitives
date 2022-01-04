@@ -3,6 +3,7 @@ use codec::alloc::string::{String, ToString};
 
 #[cfg(feature = "std")]
 use {
+    crate::Balance,
     serde::{Deserialize, Serialize},
     strum_macros::EnumIter,
 };
@@ -140,5 +141,26 @@ impl Asset {
             return true;
         }
         false
+    }
+
+    /// Saturating integer multiplication. Computes self * rhs, saturating at the numeric bounds instead of overflowing.
+    /// By example, if you saturating_mul(10) with `BTC` it'll return `1_000_000_000`
+    #[cfg(feature = "std")]
+    pub fn saturating_mul(&self, amount: Balance) -> Balance {
+        amount.saturating_mul(10_u128.pow(self.exponent() as u32))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn test_saturation_of_assets() {
+        assert_eq!(Asset::Bitcoin.saturating_mul(10), 1_000_000_000);
+        assert_eq!(Asset::Tide.saturating_mul(912), 912_000_000_000_000);
+        assert_eq!(
+            Asset::USDCoin.saturating_mul(838_912_012),
+            838_912_012_000_000
+        );
     }
 }
