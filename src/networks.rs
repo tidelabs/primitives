@@ -3,8 +3,7 @@ use serde::{Deserialize, Serialize};
 use std::str::FromStr;
 use strum_macros::EnumIter;
 
-#[derive(Clone, PartialEq, Eq, Ord, PartialOrd)]
-#[cfg_attr(feature = "std", derive(EnumIter, Debug, Serialize, Deserialize, Hash))]
+#[derive(Clone, PartialEq, Eq, Ord, PartialOrd, EnumIter, Debug, Serialize, Deserialize, Hash)]
 pub enum Network {
     Local,
     Devnet,
