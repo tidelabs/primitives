@@ -38,6 +38,7 @@ pub enum CurrencyId {
 }
 
 impl Asset {
+    /// Get the `AssetId` used on-chain with the pallet_assets
     pub fn id(&self) -> u32 {
         match self {
             Asset::Tide => TIDE,
@@ -47,12 +48,16 @@ impl Asset {
             Asset::USDCoin => USDC,
         }
     }
+
+    /// Return the `CurrencyId` used by different pallets for Tidechain
     pub fn currency_id(&self) -> CurrencyId {
         if self == &Asset::Tide {
             return CurrencyId::Tide;
         }
         CurrencyId::Wrapped(self.id())
     }
+
+    /// Return the symbol e.g.: BTC
     pub fn symbol(&self) -> String {
         match self {
             Asset::Tide => "TIDE".to_string(),
@@ -62,6 +67,19 @@ impl Asset {
             Asset::Tether => "USDT".to_string(),
         }
     }
+
+    /// Return the asset name e.g.: Bitcoin
+    pub fn name(&self) -> String {
+        match self {
+            Asset::Tide => "Tide".to_string(),
+            Asset::Bitcoin => "Bitcoin".to_string(),
+            Asset::Ethereum => "Ethereum".to_string(),
+            Asset::USDCoin => "USD Coin".to_string(),
+            Asset::Tether => "Tether".to_string(),
+        }
+    }
+
+    /// Return the number of decimals. e.g.: `8` for `BTC`
     pub fn exponent(&self) -> u8 {
         match self {
             Asset::Tide => 12,
@@ -71,6 +89,8 @@ impl Asset {
             Asset::Tether => 6,
         }
     }
+
+    /// Return the algorythm for the coin
     pub fn algo(&self) -> Algo {
         match self {
             Asset::Tide => Algo::SR25519,
@@ -80,6 +100,8 @@ impl Asset {
             Asset::Tether => Algo::WEB3,
         }
     }
+
+    /// Return the units name of the asset. e.g.: `wei`
     pub fn unit_name(&self) -> Option<String> {
         match self {
             Asset::Tide => None,
@@ -89,6 +111,8 @@ impl Asset {
             Asset::Tether => None,
         }
     }
+
+    /// Return an optional prefix for the asset. e.g. `₿`
     pub fn prefix(&self) -> Option<String> {
         match self {
             Asset::Tide => None,
@@ -98,6 +122,8 @@ impl Asset {
             Asset::Tether => None,
         }
     }
+
+    /// Based chain connected to the asset. (mainly used to identify wrapped tokens)
     pub fn base_chain(&self) -> Option<Asset> {
         match self {
             Asset::Tide => None,
@@ -107,7 +133,8 @@ impl Asset {
             Asset::Tether => Some(Asset::Ethereum),
         }
     }
-    // these coins require a deposit to a second "pot" address
+
+    /// Validate if these coins require a deposit to a second "pot" address
     pub fn to_pot(&self) -> bool {
         if self == &Asset::Bitcoin {
             return true;
