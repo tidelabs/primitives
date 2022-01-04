@@ -1,4 +1,4 @@
-use crate::AssetId;
+use crate::{AssetId, CurrencyId};
 use codec::alloc::string::{String, ToString};
 
 #[cfg(feature = "std")]
@@ -28,14 +28,6 @@ pub enum Algo {
     SR25519,
     SECP256K1,
     WEB3,
-}
-
-#[derive(Debug, Clone, Copy, Eq, PartialEq)]
-#[cfg_attr(feature = "std", derive(Deserialize, Serialize))]
-#[cfg_attr(feature = "std", serde(tag = "type", content = "id"))]
-pub enum CurrencyId {
-    Tide,
-    Wrapped(AssetId),
 }
 
 impl Asset {
