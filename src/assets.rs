@@ -1,6 +1,11 @@
 use crate::AssetId;
-use serde::{Deserialize, Serialize};
-use strum_macros::EnumIter;
+use codec::alloc::string::{String, ToString};
+
+#[cfg(feature = "std")]
+use {
+    serde::{Deserialize, Serialize},
+    strum_macros::EnumIter,
+};
 
 pub const TIDE: AssetId = 1;
 pub const BTC: AssetId = 2;
@@ -24,8 +29,9 @@ pub enum Algo {
     WEB3,
 }
 
-#[derive(Debug, Clone, Copy, Eq, PartialEq, Deserialize, Serialize)]
-#[serde(tag = "type", content = "id")]
+#[derive(Debug, Clone, Copy, Eq, PartialEq)]
+#[cfg_attr(feature = "std", derive(Deserialize, Serialize))]
+#[cfg_attr(feature = "std", serde(tag = "type", content = "id"))]
 pub enum CurrencyId {
     Tide,
     Wrapped(AssetId),
