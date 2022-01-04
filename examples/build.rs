@@ -3,7 +3,7 @@ use std::collections::BTreeMap;
 use strum::IntoEnumIterator;
 use tidefi_primitives::{
     assets::{Asset, CurrencyId},
-    networks::{Addresses, ChainIds, Network},
+    networks::{ChainIds, Network},
 };
 
 #[derive(Serialize)]
@@ -20,13 +20,13 @@ struct IToken {
     #[serde(skip_serializing_if = "Option::is_none")]
     base_chain: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    router_address: Option<BTreeMap<String, String>>,
+    router_address: Option<BTreeMap<&'static str, &'static str>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    multisig_address: Option<BTreeMap<String, String>>,
+    multisig_address: Option<BTreeMap<&'static str, &'static str>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    asset_address: Option<BTreeMap<String, String>>,
+    asset_address: Option<BTreeMap<&'static str, &'static str>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    chain_id: Option<BTreeMap<String, u32>>,
+    chain_id: Option<BTreeMap<&'static str, u32>>,
 }
 
 #[derive(Serialize)]
@@ -41,22 +41,6 @@ fn main() {
 
 fn f(a: Asset) -> String {
     format!("{:?}", a)
-}
-
-fn addresses_to_map(a: Addresses) -> Option<BTreeMap<String, String>> {
-    let mut m = BTreeMap::new();
-    m.insert("Devnet".to_string(), a.devnet);
-    m.insert("Testnet".to_string(), a.testnet);
-    m.insert("Mainnet".to_string(), a.mainnet);
-    Some(m)
-}
-
-fn chainids_to_map(a: ChainIds) -> Option<BTreeMap<String, u32>> {
-    let mut m = BTreeMap::new();
-    m.insert("Devnet".to_string(), a.devnet);
-    m.insert("Testnet".to_string(), a.testnet);
-    m.insert("Mainnet".to_string(), a.mainnet);
-    Some(m)
 }
 
 fn build_assets() {
@@ -78,18 +62,10 @@ fn build_assets() {
         if let Some(bc) = asset.base_chain() {
             token.base_chain = Some(f(bc));
         }
-        if let Some(ra) = asset.router() {
-            token.router_address = addresses_to_map(ra);
-        }
-        if let Some(ma) = asset.multisig() {
-            token.multisig_address = addresses_to_map(ma);
-        }
-        if let Some(aa) = asset.address() {
-            token.asset_address = addresses_to_map(aa);
-        }
-        if let Some(cid) = asset.chain_id() {
-            token.chain_id = chainids_to_map(cid);
-        }
+        token.router_address = asset.router();
+        token.multisig_address = asset.multisig();
+        token.asset_address = asset.address();
+        token.chain_id = asset.chain_id();
         tokens.push(token)
     }
     let tz = serde_json::to_string_pretty(&tokens).unwrap();
