@@ -9,6 +9,7 @@ use sp_runtime::{
 };
 
 pub mod assets;
+pub mod networks;
 pub use assets::BTC;
 
 #[cfg(feature = "std")]

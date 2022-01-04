@@ -1,0 +1,77 @@
+[
+  {
+    "id": {
+      "type": "Tide"
+    },
+    "name": "Tide",
+    "abbr": "TIDE",
+    "exponent": 12
+  },
+  {
+    "id": {
+      "type": "Wrapped",
+      "id": 2
+    },
+    "name": "Bitcoin",
+    "abbr": "BTC",
+    "exponent": 8,
+    "unitName": "satoshi",
+    "symbol": "₿"
+  },
+  {
+    "id": {
+      "type": "Wrapped",
+      "id": 3
+    },
+    "name": "Ethereum",
+    "abbr": "ETH",
+    "exponent": 18,
+    "unitName": "wei",
+    "symbol": "Ξ",
+    "routerAddress": {
+      "Devnet": "0xdbd4910f54a3751f964cb3bad99374134b2e34e7",
+      "Mainnet": "",
+      "Testnet": "0x9d2aebec4b3b9ba6e6a57c889cfbcdc9b52f46d4"
+    },
+    "multisigAddress": {
+      "Devnet": "0xeed55a8e858d98371330d990358360ee36eeee6f",
+      "Mainnet": "",
+      "Testnet": "0x1d649c81f979d6df3c5aa8f0e06a1d5e8c9a7b91"
+    },
+    "chainId": {
+      "Devnet": 1337,
+      "Mainnet": 1,
+      "Testnet": 3
+    }
+  },
+  {
+    "id": {
+      "type": "Wrapped",
+      "id": 4
+    },
+    "name": "Tether",
+    "abbr": "USDT",
+    "exponent": 6,
+    "baseChain": "Ethereum",
+    "assetAddress": {
+      "Devnet": "0x348484e4a9a95dbd667398fe4f4fa6d4aaae4e18",
+      "Mainnet": "",
+      "Testnet": "0x91e6198f5cf80a6c47212e440e72bf4e052ce148"
+    }
+  },
+  {
+    "id": {
+      "type": "Wrapped",
+      "id": 5
+    },
+    "name": "USDCoin",
+    "abbr": "USDC",
+    "exponent": 6,
+    "baseChain": "Ethereum",
+    "assetAddress": {
+      "Devnet": "",
+      "Mainnet": "",
+      "Testnet": "0x698638ba2c96e49cb5387354925f95bceef8e9f3"
+    }
+  }
+]
