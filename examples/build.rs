@@ -1,10 +1,7 @@
 use serde::Serialize;
 use std::collections::BTreeMap;
 use strum::IntoEnumIterator;
-use tidefi_primitives::{
-    assets::{Asset, CurrencyId},
-    networks::{ChainIds, Network},
-};
+use tidefi_primitives::{assets::Asset, networks::Network, CurrencyId};
 
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -20,13 +17,13 @@ struct IToken {
     #[serde(skip_serializing_if = "Option::is_none")]
     base_chain: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    router_address: Option<BTreeMap<&'static str, &'static str>>,
+    router_address: Option<BTreeMap<String, String>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    multisig_address: Option<BTreeMap<&'static str, &'static str>>,
+    multisig_address: Option<BTreeMap<String, String>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    asset_address: Option<BTreeMap<&'static str, &'static str>>,
+    asset_address: Option<BTreeMap<String, String>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    chain_id: Option<BTreeMap<&'static str, u32>>,
+    chain_id: Option<BTreeMap<String, u32>>,
 }
 
 #[derive(Serialize)]
