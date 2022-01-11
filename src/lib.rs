@@ -128,15 +128,15 @@ pub struct Withdrawal<AccountId, BlockNumber> {
     pub amount: Balance,
     /// The address on the AssetID chain where to send the funds.
     pub external_address: Vec<u8>,
-    /// The block ID the withdrawal request is in.
+    /// The block ID the withdrawal has been initialized.
     pub block_number: BlockNumber,
 }
 
-/// Trade status.
+/// Swap status.
 #[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
-pub enum TradeStatus {
+pub enum SwapStatus {
     /// Initial status
     Pending,
     /// Cancelled
@@ -145,48 +145,48 @@ pub enum TradeStatus {
     PartiallyFilled,
     /// Completed (totally filled)
     Completed,
-    /// Something went wrong the trade has been rejected
+    /// Something went wrong the swap has been rejected
     Rejected,
 }
 
-/// Trade details.
+/// Swap details stored on-chain.
 #[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
-pub struct Trade<AccountId, BlockNumber> {
-    /// Extrinsic hash of the initial trade request
+pub struct Swap<AccountId, BlockNumber> {
+    /// Extrinsic hash of the initial swap request
     pub extrinsic_hash: [u8; 32],
-    /// Account ID of the trade.
+    /// Account ID of the swap.
     pub account_id: AccountId,
-    /// Asset ID of the trade.
+    /// Asset ID of the swap.
     pub token_from: CurrencyId,
     /// Amount from
     pub amount_from: Balance,
     /// Amount from (currently filled -- if partial)
     pub amount_from_filled: Balance,
-    /// Asset ID to the trade.
+    /// Asset ID to the swap.
     pub token_to: CurrencyId,
     /// Amount to (requested)
     pub amount_to: Balance,
     /// Amount to (currently filled -- if partial)
     pub amount_to_filled: Balance,
-    /// Trade status
-    pub status: TradeStatus,
-    /// The block ID the trade request is in.
+    /// Swap status
+    pub status: SwapStatus,
+    /// The block ID the swap request is in.
     pub block_number: BlockNumber,
 }
 
-/// Market maker trade confirmation.
+/// Market maker swap confirmation.
 #[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone, Default)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
-pub struct TradeConfirmation {
-    /// Request ID of the market maker trade request, used to fulfill this trade request.
+pub struct SwapConfirmation {
+    /// Request ID of the market maker swap request, used to fulfill this swap request.
     pub request_id: Hash,
     /// Amount of the source, should be formatted with the source currency, the market maker will receive this amount of asset.
     pub amount_to_receive: Balance,
     /// Amount of the destination, should be formatted with the destination currency, the market maker will send this amount of asset,
-    /// and the trade will be filled with this amount. It may provide a partial or a complete fill.
+    /// and the swap will be filled with this amount. It may provide a partial or a complete fill.
     pub amount_to_send: Balance,
 }
 
@@ -245,27 +245,27 @@ pub struct Fee {
     pub fee: Balance,
 }
 
-/// Trade extrinsic with trade fee details.
+/// Swap extrinsic with swap fee details.
 #[derive(Eq, PartialEq, TypeInfo, Clone)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
-pub struct TradeExtrinsic {
+pub struct SwapExtrinsic {
     /// Signed extrinsic
     pub extrinsic: String,
-    /// The estimated trading fee
-    pub trade_fee: Balance,
-    /// The currency the trading fees are taken
-    pub trade_fee_currency: CurrencyId,
+    /// The estimated swap fee
+    pub swap_fee: Balance,
+    /// The currency the swap fees are taken
+    pub swap_fee_currency: CurrencyId,
 }
 
 pub mod pallet {
-    use super::{Balance, CurrencyId, Fee, Hash, Trade, Withdrawal};
+    use super::{Balance, CurrencyId, Fee, Hash, Swap, Withdrawal};
     use scale_info::prelude::vec::Vec;
     /// Quorum traits to share with pallets.
     pub trait QuorumExt<AccountId, BlockNumber> {
         /// Get current Quorum status.
         fn is_quorum_enabled() -> bool;
-        /// Add a new withdrawl request to the queue.
+        /// Add a new withdrawl to the queue.
         fn add_new_withdrawal_in_queue(
             account_id: AccountId,
             asset_id: CurrencyId,
@@ -278,8 +278,8 @@ pub mod pallet {
     pub trait OracleExt<AccountId, BlockNumber> {
         /// Get current Quorum status.
         fn is_oracle_enabled() -> bool;
-        /// Add a new trade request to the queue.
-        fn add_new_trade_in_queue(
+        /// Add a new swap to the queue.
+        fn add_new_swap_in_queue(
             account_id: AccountId,
             asset_id_from: CurrencyId,
             amount_from: Balance,
@@ -287,7 +287,7 @@ pub mod pallet {
             amount_to: Balance,
             block_number: BlockNumber,
             extrinsic_hash: [u8; 32],
-        ) -> (Hash, Trade<AccountId, BlockNumber>);
+        ) -> (Hash, Swap<AccountId, BlockNumber>);
     }
 
     pub trait SecurityExt<AccountId, BlockNumber> {
@@ -309,13 +309,10 @@ pub mod pallet {
         /// Calculate the fee to be deposited into the central wallet
         /// You have to reduce the amount by the returned value manually and
         /// deposit the funds into the wallet
-        fn calculate_trading_fees(
-            currency_id: CurrencyId,
-            total_amount_before_fees: Balance,
-        ) -> Fee;
-        /// Register a new trading fees associated with the account for the current era.
+        fn calculate_swap_fees(currency_id: CurrencyId, total_amount_before_fees: Balance) -> Fee;
+        /// Register a new swap fees associated with the account for the current era.
         /// A percentage of the network profits will be re-distributed to the account at the end of the era.
-        fn register_trading_fees(
+        fn register_swap_fees(
             account_id: AccountId,
             currency_id: CurrencyId,
             total_amount_before_fees: Balance,
