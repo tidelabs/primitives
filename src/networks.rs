@@ -49,7 +49,7 @@ impl Asset {
     pub fn router(&self) -> Option<Addresses> {
         if self == &Asset::Ethereum {
             return Some(str_map(vec![
-                ("Local", "0xdbd4910f54a3751f964cb3bad99374134b2e34e7"),
+                ("Local", "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512"),
                 ("Testnet", "0x9d2aebec4b3b9ba6e6a57c889cfbcdc9b52f46d4"),
             ]));
         }
@@ -58,7 +58,7 @@ impl Asset {
     pub fn multisig(&self) -> Option<Addresses> {
         if self == &Asset::Ethereum {
             return Some(str_map(vec![
-                ("Local", "0xeed55a8e858d98371330d990358360ee36eeee6f"),
+                ("Local", "0x5fc8d32690cc91d4c39d9d3abcbd16989f875707"),
                 ("Testnet", "0x1d649c81f979d6df3c5aa8f0e06a1d5e8c9a7b91"),
             ]));
         }
@@ -67,7 +67,7 @@ impl Asset {
     pub fn address(&self) -> Option<Addresses> {
         if self == &Asset::Tether {
             return Some(str_map(vec![
-                ("Local", "0x348484e4a9a95dbd667398fe4f4fa6d4aaae4e18"),
+                ("Local", "0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0"),
                 ("Testnet", "0x91e6198f5cf80a6c47212e440e72bf4e052ce148"),
             ]));
         } else if self == &Asset::USDCoin {
