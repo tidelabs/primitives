@@ -245,6 +245,17 @@ pub struct Fee {
     pub fee: Balance,
 }
 
+/// Currency balance.
+#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone, Default)]
+#[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
+#[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
+pub struct CurrencyBalance<Balance> {
+    /// Available balance
+    pub available: Balance,
+    /// Reserved balance
+    pub reserved: Balance,
+}
+
 /// Swap extrinsic with swap fee details.
 #[derive(Eq, PartialEq, TypeInfo, Clone)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
