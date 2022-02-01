@@ -261,6 +261,7 @@ pub struct SwapExtrinsic {
 pub mod pallet {
     use super::{Balance, CurrencyId, Fee, Hash, Swap, Withdrawal};
     use scale_info::prelude::vec::Vec;
+    use sp_runtime::DispatchError;
     /// Quorum traits to share with pallets.
     pub trait QuorumExt<AccountId, BlockNumber> {
         /// Get current Quorum status.
@@ -287,7 +288,12 @@ pub mod pallet {
             amount_to: Balance,
             block_number: BlockNumber,
             extrinsic_hash: [u8; 32],
-        ) -> (Hash, Swap<AccountId, BlockNumber>);
+        ) -> Result<(Hash, Swap<AccountId, BlockNumber>), DispatchError>;
+        /// Cancel swap and release funds.
+        fn remove_swap_from_queue(
+            requester: AccountId,
+            request_id: Hash,
+        ) -> Result<(), DispatchError>;
     }
 
     pub trait SecurityExt<AccountId, BlockNumber> {
