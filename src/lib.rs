@@ -194,7 +194,7 @@ pub struct SwapConfirmation {
 #[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone, Default)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
-pub struct Stake<Balance> {
+pub struct Stake<Balance, BlockNumber> {
     /// Block number the stake has started.
     /// We can compute the timestamp with `timestamp.now().at(BlockNumer)`
     /// Not saving the timestamp will same some space on-chain.
