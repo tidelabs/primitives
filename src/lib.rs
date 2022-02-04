@@ -195,12 +195,16 @@ pub struct SwapConfirmation {
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
 pub struct Stake<Balance> {
-    /// Principal balance (with accrued interest)
-    pub principal: Balance,
+    /// Block number the stake has started.
+    /// We can compute the timestamp with `timestamp.now().at(BlockNumer)`
+    /// Not saving the timestamp will same some space on-chain.
+    pub initial_block: BlockNumber,
     /// Initial balance
     pub initial_balance: Balance,
+    /// Principal balance (with accrued interest)
+    pub principal: Balance,
     /// Duration of the stake
-    pub duration: u32,
+    pub duration: BlockNumber,
 }
 
 /// Currency metadata.
