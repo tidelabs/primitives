@@ -70,6 +70,9 @@ pub type BlockId = generic::BlockId<Block>;
 /// Counter for the number of eras that have passed.
 pub type EraIndex = u32;
 
+/// Counter for the number of sessions that have passed.
+pub type SessionIndex = u64;
+
 /// Enum indicating the currency. Tide is the native token.
 #[derive(Encode, Decode, TypeInfo, Eq, PartialEq, Copy, Clone, RuntimeDebug, PartialOrd, Ord)]
 #[cfg_attr(feature = "std", derive(Serialize, Deserialize, Hash))]
@@ -229,8 +232,12 @@ pub struct CurrencyMetadata {
 pub struct ActiveEraInfo<BlockNumber> {
     /// Index of era.
     pub index: EraIndex,
-    /// The block where the.
+    /// The block where the era started.
     pub start_block: Option<BlockNumber>,
+    /// The session index where the era started.
+    pub start_session_index: Option<SessionIndex>,
+    /// The block where the last session ended.
+    pub last_session_block: Option<BlockNumber>,
     /// Moment of start expressed as millisecond from `$UNIX_EPOCH`.
     ///
     /// Start can be none if start hasn't been set for the era yet,
@@ -274,7 +281,7 @@ pub struct SwapExtrinsic {
 }
 
 pub mod pallet {
-    use super::{Balance, CurrencyId, Fee, Hash, Swap, Withdrawal};
+    use super::{Balance, CurrencyId, Fee, Hash, SessionIndex, Swap, Withdrawal};
     use scale_info::prelude::vec::Vec;
     use sp_runtime::DispatchError;
     /// Quorum traits to share with pallets.
@@ -342,7 +349,17 @@ pub mod pallet {
         fn account_id() -> AccountId;
     }
 
-    pub trait WraprExt<AccountId> {}
+    pub trait StakingExt<AccountId> {
+        /// Triggered when a session end in the Fee pallet
+        fn on_session_end(
+            session_index: SessionIndex,
+            session_trade_values: Vec<(CurrencyId, Balance)>,
+        ) -> Result<(), DispatchError>;
+        /// Get the staking account id where the funds are transfered
+        fn account_id() -> AccountId;
+    }
+
+    pub trait WraprExt {}
 }
 
 #[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Default)]
