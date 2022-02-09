@@ -198,6 +198,12 @@ pub struct SwapConfirmation {
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
 pub struct Stake<Balance, BlockNumber> {
+    /// Unique stake id bounded to this account.
+    pub currency_id: CurrencyId,
+    /// Unique stake id bounded to this account.
+    pub unique_id: Hash,
+    /// The last session the interest has been compounded and accumulated into the stake `principal` value.
+    pub last_session_index_compound: SessionIndex,
     /// Block number the stake has started.
     /// We can compute the timestamp with `timestamp.now().at(BlockNumer)`
     /// Not saving the timestamp will same some space on-chain.
