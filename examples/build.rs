@@ -1,12 +1,28 @@
 use serde::Serialize;
 use std::collections::BTreeMap;
 use strum::IntoEnumIterator;
-use tidefi_primitives::{assets::Asset, networks::Network, CurrencyId};
+use tidefi_primitives::{assets::Asset, networks::Network, AssetId, CurrencyId};
+
+#[derive(Debug, Clone, Copy, Eq, PartialEq, Serialize)]
+#[serde(tag = "type", content = "id")]
+pub enum BuildCurrencyId {
+    Tide,
+    Wrapped(AssetId),
+}
+
+impl From<CurrencyId> for BuildCurrencyId {
+    fn from(id: CurrencyId) -> Self {
+        match id {
+            CurrencyId::Tide => Self::Tide,
+            CurrencyId::Wrapped(id) => Self::Wrapped(id),
+        }
+    }
+}
 
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 struct IToken {
-    id: CurrencyId,
+    id: BuildCurrencyId,
     name: String,
     abbr: String,
     exponent: u8,
@@ -44,7 +60,7 @@ fn build_assets() {
     let mut tokens: Vec<IToken> = vec![];
     for asset in Asset::iter() {
         let mut token = IToken {
-            id: asset.currency_id(),
+            id: asset.currency_id().into(),
             name: f(asset.clone()),
             abbr: asset.symbol(),
             exponent: asset.exponent(),

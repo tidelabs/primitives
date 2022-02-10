@@ -1,13 +1,16 @@
 [
   {
-    "id": "Tide",
+    "id": {
+      "type": "Tide"
+    },
     "name": "Tide",
     "abbr": "TIDE",
     "exponent": 12
   },
   {
     "id": {
-      "Wrapped": 2
+      "type": "Wrapped",
+      "id": 2
     },
     "name": "Bitcoin",
     "abbr": "BTC",
@@ -17,7 +20,8 @@
   },
   {
     "id": {
-      "Wrapped": 3
+      "type": "Wrapped",
+      "id": 3
     },
     "name": "Ethereum",
     "abbr": "ETH",
@@ -43,7 +47,8 @@
   },
   {
     "id": {
-      "Wrapped": 4
+      "type": "Wrapped",
+      "id": 4
     },
     "name": "Tether",
     "abbr": "USDT",
@@ -57,7 +62,8 @@
   },
   {
     "id": {
-      "Wrapped": 5
+      "type": "Wrapped",
+      "id": 5
     },
     "name": "USDCoin",
     "abbr": "USDC",
