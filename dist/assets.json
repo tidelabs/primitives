@@ -1,16 +1,13 @@
 [
   {
-    "id": {
-      "type": "Tide"
-    },
+    "id": "Tide",
     "name": "Tide",
     "abbr": "TIDE",
     "exponent": 12
   },
   {
     "id": {
-      "type": "Wrapped",
-      "id": 2
+      "Wrapped": 2
     },
     "name": "Bitcoin",
     "abbr": "BTC",
@@ -20,8 +17,7 @@
   },
   {
     "id": {
-      "type": "Wrapped",
-      "id": 3
+      "Wrapped": 3
     },
     "name": "Ethereum",
     "abbr": "ETH",
@@ -29,49 +25,47 @@
     "unitName": "wei",
     "symbol": "Ξ",
     "routerAddress": {
-      "Devnet": "0xdbd4910f54a3751f964cb3bad99374134b2e34e7",
-      "Mainnet": "",
-      "Testnet": "0x9d2aebec4b3b9ba6e6a57c889cfbcdc9b52f46d4"
+      "devnet": "0xae8a6463bf8449e6b5ee8277924cd6132b809be4",
+      "local": "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512",
+      "testnet": "0xaa57cd19ae5ed73ea4be754051eb5933d1efd7e0"
     },
     "multisigAddress": {
-      "Devnet": "0xeed55a8e858d98371330d990358360ee36eeee6f",
-      "Mainnet": "",
-      "Testnet": "0x1d649c81f979d6df3c5aa8f0e06a1d5e8c9a7b91"
+      "devnet": "0x971c11eb24778bf6824c82f0e82d6530bdeff7a2",
+      "local": "0x5fc8d32690cc91d4c39d9d3abcbd16989f875707",
+      "testnet": "0x86c5be5c0e24a32db15f9b1a6cadd1ba7cbcc031"
     },
     "chainId": {
-      "Devnet": 1337,
-      "Mainnet": 1,
-      "Testnet": 3
+      "devnet": 3,
+      "local": 1337,
+      "mainnet": 1,
+      "testnet": 3
     }
   },
   {
     "id": {
-      "type": "Wrapped",
-      "id": 4
+      "Wrapped": 4
     },
     "name": "Tether",
     "abbr": "USDT",
     "exponent": 6,
     "baseChain": "Ethereum",
     "assetAddress": {
-      "Devnet": "0x348484e4a9a95dbd667398fe4f4fa6d4aaae4e18",
-      "Mainnet": "",
-      "Testnet": "0x91e6198f5cf80a6c47212e440e72bf4e052ce148"
+      "devnet": "0xb604ee489aa63aef787a652c606db750b4793e65",
+      "local": "0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0",
+      "testnet": "0xdd60d69de8e211dcaa264142a10e534a68d4ef9d"
     }
   },
   {
     "id": {
-      "type": "Wrapped",
-      "id": 5
+      "Wrapped": 5
     },
     "name": "USDCoin",
     "abbr": "USDC",
     "exponent": 6,
     "baseChain": "Ethereum",
     "assetAddress": {
-      "Devnet": "",
-      "Mainnet": "",
-      "Testnet": "0x698638ba2c96e49cb5387354925f95bceef8e9f3"
+      "devnet": "0xf4197f30c8268c933ea57f85c1206e348b54c467",
+      "testnet": "0x4170e38d4830f228e3c6e019ad92a29c319c56c2"
     }
   }
 ]
