@@ -69,8 +69,8 @@ impl Asset {
         if self == &Asset::Ethereum {
             return Some(str_map(vec![
                 ("local", "0x5fc8d32690cc91d4c39d9d3abcbd16989f875707"),
-                ("devnet", "0x8e0f4a76469096ad322509d4984ee98b10e18ac5"),
-                ("testnet", "0x797939ff57165a46bd0bfa8587f9cb70033b7fb5"),
+                ("devnet", "0x971c11eb24778bf6824c82f0e82d6530bdeff7a2"),
+                ("testnet", "0x86c5be5c0e24a32db15f9b1a6cadd1ba7cbcc031"),
             ]));
         }
         None
