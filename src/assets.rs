@@ -1,9 +1,8 @@
-use crate::{AssetId, CurrencyId};
+use crate::{AssetId, Balance, CurrencyId};
 use codec::alloc::string::{String, ToString};
 
 #[cfg(feature = "std")]
 use {
-    crate::Balance,
     serde::{Deserialize, Serialize},
     strum_macros::EnumIter,
 };
