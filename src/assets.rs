@@ -127,6 +127,36 @@ impl Asset {
         }
     }
 
+    /// Default minimum amount / stake, the value on-chain may differ.
+    pub fn default_minimum_stake_amount(&self) -> Balance {
+        match self {
+            // 10 tide
+            Asset::Tide => 10_000_000_000_000,
+            // 0.00000100 BTC
+            Asset::Bitcoin => 100,
+            // 0.000000000000100000 ETH
+            Asset::Ethereum => 100_000,
+            // 1
+            Asset::USDCoin => 1_000_000,
+            Asset::Tether => 1_000_000,
+        }
+    }
+
+    /// Default maximum amount / stake, the value on-chain may differ.
+    pub fn default_maximum_stake_amount(&self) -> Balance {
+        match self {
+            // 500k tide
+            Asset::Tide => 500_000_000_000_000_000,
+            // 5 btc
+            Asset::Bitcoin => 500_000_000,
+            // 20 eth
+            Asset::Ethereum => 20_000_000_000_000_000_000,
+            // 100k USD
+            Asset::USDCoin => 100_000_000_000,
+            Asset::Tether => 100_000_000_000,
+        }
+    }
+
     /// Validate if these coins require a deposit to a second "pot" address
     pub fn to_pot(&self) -> bool {
         if self == &Asset::Bitcoin {
