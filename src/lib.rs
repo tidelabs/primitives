@@ -216,6 +216,17 @@ pub struct Stake<Balance, BlockNumber> {
     pub duration: BlockNumber,
 }
 
+/// Stake currency meta.
+#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone, Default)]
+#[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
+#[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
+pub struct StakeCurrencyMeta<Balance> {
+    /// Minimum stake amount for this currency.
+    pub minimum_amount: Balance,
+    /// Maximum stake amount for this currency.
+    pub maximum_amount: Balance,
+}
+
 /// Currency metadata.
 #[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone, Default)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
