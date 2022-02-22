@@ -8,7 +8,7 @@ use scale_info::{
 use sp_runtime::{
     generic,
     traits::{BlakeTwo256, IdentifyAccount, Verify},
-    MultiSignature, OpaqueExtrinsic, RuntimeDebug,
+    MultiSignature, OpaqueExtrinsic, Permill, RuntimeDebug,
 };
 
 pub mod assets;
@@ -152,6 +152,17 @@ pub enum SwapStatus {
     Rejected,
 }
 
+/// Swap type
+#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone)]
+#[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
+#[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
+pub enum SwapType {
+    /// Market swaps can partially fill, but are deleted immediately upon partial fil
+    Market,
+    /// Limit swaps can be partially filled and stay on chain
+    Limit,
+}
+
 /// Swap details stored on-chain.
 #[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
@@ -161,6 +172,8 @@ pub struct Swap<AccountId, BlockNumber> {
     pub extrinsic_hash: [u8; 32],
     /// Account ID of the swap.
     pub account_id: AccountId,
+    /// Determines if the swap has been created by an official market maker
+    pub is_market_maker: bool,
     /// Asset ID of the swap.
     pub token_from: CurrencyId,
     /// Amount from
@@ -175,8 +188,12 @@ pub struct Swap<AccountId, BlockNumber> {
     pub amount_to_filled: Balance,
     /// Swap status
     pub status: SwapStatus,
-    /// The block ID the swap request is in.
+    /// Swap type
+    pub swap_type: SwapType,
+    /// The block number the swap request has been created
     pub block_number: BlockNumber,
+    /// Slippage tolerance on the `amount_to`
+    pub slippage: Permill,
 }
 
 /// Market maker swap confirmation.
