@@ -335,6 +335,8 @@ pub mod pallet {
     pub trait OracleExt<AccountId, BlockNumber> {
         /// Get current Quorum status.
         fn is_oracle_enabled() -> bool;
+        /// Check if the account is an official market maker.
+        fn is_market_maker(account_id: AccountId) -> Result<bool, DispatchError>;
         /// Add a new swap to the queue.
         fn add_new_swap_in_queue(
             account_id: AccountId,
@@ -374,13 +376,18 @@ pub mod pallet {
         /// Calculate the fee to be deposited into the central wallet
         /// You have to reduce the amount by the returned value manually and
         /// deposit the funds into the wallet
-        fn calculate_swap_fees(currency_id: CurrencyId, total_amount_before_fees: Balance) -> Fee;
+        fn calculate_swap_fees(
+            currency_id: CurrencyId,
+            total_amount_before_fees: Balance,
+            is_market_maker: bool,
+        ) -> Fee;
         /// Register a new swap fees associated with the account for the current era.
         /// A percentage of the network profits will be re-distributed to the account at the end of the era.
         fn register_swap_fees(
             account_id: AccountId,
             currency_id: CurrencyId,
             total_amount_before_fees: Balance,
+            is_market_maker: bool,
         ) -> Fee;
         /// Get the account if of the central wallet to make deposit
         fn account_id() -> AccountId;
