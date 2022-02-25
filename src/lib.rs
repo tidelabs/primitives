@@ -152,24 +152,63 @@ pub struct WatchList<BlockNumber> {
     pub block_number: BlockNumber,
 }
 
-/// Withdrawal status.
+/// Proposal status
 #[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
-pub enum WithdrawalStatus {
-    Pending,
-    Cancelled,
+pub enum ProposalStatus {
+    /// Poposal has been initiated
+    Initiated,
+    /// Poposal has been approved
     Approved,
+    /// Poposal has been rejected
     Rejected,
 }
 
-/// Watchlist details.
+/// Proposal type
+#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone)]
+#[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
+#[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
+pub enum ProposalType<AccountId, BlockNumber> {
+    /// Mint tokens on-chain
+    Mint(Mint<AccountId>),
+    /// Burn tokens on-chain
+    Withdrawal(Withdrawal<AccountId, BlockNumber>),
+    /// Add new quorum member
+    AddQuorumMember(AccountId),
+    /// Add new quorum member
+    RemoveQuorumMember(AccountId),
+    /// Update threshold
+    UpdateThreshold(u16),
+}
+
+/// Proposal votes
+#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone)]
+#[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
+#[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
+pub struct ProposalVotes<AccountId, BlockNumber> {
+    pub votes_for: Vec<AccountId>,
+    pub votes_against: Vec<AccountId>,
+    pub status: ProposalStatus,
+    pub expiry: BlockNumber,
+}
+
+impl<AccountId, BlockNumber: Default> Default for ProposalVotes<AccountId, BlockNumber> {
+    fn default() -> Self {
+        Self {
+            votes_for: Vec::new(),
+            votes_against: Vec::new(),
+            status: ProposalStatus::Initiated,
+            expiry: BlockNumber::default(),
+        }
+    }
+}
+
+/// Withdrawal details.
 #[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
 pub struct Withdrawal<AccountId, BlockNumber> {
-    /// Status of the withdrawal.
-    pub status: WithdrawalStatus,
     /// Account ID requesting the withdrawal.
     pub account_id: AccountId,
     /// The Asset ID to widthdraw.
@@ -180,6 +219,23 @@ pub struct Withdrawal<AccountId, BlockNumber> {
     pub external_address: Vec<u8>,
     /// The block ID the withdrawal has been initialized.
     pub block_number: BlockNumber,
+}
+
+/// Mint details.
+#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone)]
+#[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
+#[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
+pub struct Mint<AccountId> {
+    /// Account ID to mint to asset
+    pub account_id: AccountId,
+    /// The Asset ID to mint
+    pub currency_id: CurrencyId,
+    /// The amount of the asset to add    
+    pub mint_amount: Balance,
+    /// The transaction ID on chain in bytes
+    pub transaction_id: Vec<u8>,
+    /// Compliance level of the original transaction
+    pub compliance_level: ComplianceLevel,
 }
 
 /// Swap status.
@@ -375,7 +431,7 @@ pub mod pallet {
             asset_id: CurrencyId,
             amount: Balance,
             external_address: Vec<u8>,
-        ) -> (Hash, Withdrawal<AccountId, BlockNumber>);
+        ) -> Result<(), DispatchError>;
     }
 
     /// Oracle traits to share with pallets.
