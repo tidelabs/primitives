@@ -124,6 +124,32 @@ impl Default for ComplianceLevel {
     }
 }
 
+/// Enum indicating on which action the watchlist item has been added
+#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone)]
+#[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
+#[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
+pub enum WatchListAction {
+    /// Mint (deposited)
+    Mint,
+}
+
+/// Withdrawal details.
+#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone)]
+#[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
+#[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
+pub struct WatchList<BlockNumber> {
+    /// Compliance level.
+    pub compliance_level: ComplianceLevel,
+    /// The Asset ID to watch.
+    pub currency_id: CurrencyId,
+    /// The amount of the action.
+    pub amount: Balance,
+    /// The action the watch has
+    pub watch_action: WatchListAction,
+    /// The block ID the watch has been added.
+    pub block_number: BlockNumber,
+}
+
 /// Withdrawal status.
 #[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
@@ -135,7 +161,7 @@ pub enum WithdrawalStatus {
     Rejected,
 }
 
-/// Withdrawal details.
+/// Watchlist details.
 #[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
