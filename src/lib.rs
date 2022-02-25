@@ -105,6 +105,25 @@ impl Default for StatusCode {
     }
 }
 
+/// Enum indicating compliance level of a deposit (mint) on-chain.
+#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone)]
+#[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
+#[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
+pub enum ComplianceLevel {
+    /// Evertyhings look good.
+    Green = 0,
+    /// Account is added to watchlist.
+    Amber = 1,
+    /// Funds are reserved and require the council vote to repatriate the funds to the user.
+    Red = 2,
+}
+
+impl Default for ComplianceLevel {
+    fn default() -> Self {
+        ComplianceLevel::Green
+    }
+}
+
 /// Withdrawal status.
 #[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]

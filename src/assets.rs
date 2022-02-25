@@ -23,6 +23,21 @@ pub enum Asset {
     USDCoin,
 }
 
+#[cfg(feature = "std")]
+impl TryFrom<AssetId> for Asset {
+    type Error = &'static str;
+    fn try_from(asset: AssetId) -> Result<Asset, Self::Error> {
+        match asset {
+            TIDE => Ok(Asset::Tide),
+            BTC => Ok(Asset::Bitcoin),
+            ETH => Ok(Asset::Ethereum),
+            USDT => Ok(Asset::Tether),
+            USDC => Ok(Asset::USDCoin),
+            _ => Err("Invalid asset"),
+        }
+    }
+}
+
 pub enum Algo {
     SR25519,
     SECP256K1,
@@ -31,7 +46,7 @@ pub enum Algo {
 
 impl Asset {
     /// Get the `AssetId` used on-chain with the pallet_assets
-    pub fn id(&self) -> u32 {
+    pub fn id(&self) -> AssetId {
         match self {
             Asset::Tide => TIDE,
             Asset::Bitcoin => BTC,
