@@ -144,6 +144,8 @@ pub struct WatchList<BlockNumber> {
     pub currency_id: CurrencyId,
     /// The amount of the action.
     pub amount: Balance,
+    /// The transaction ID on the origin chain.
+    pub transaction_id: Vec<u8>,
     /// The action the watch has
     pub watch_action: WatchListAction,
     /// The block ID the watch has been added.
