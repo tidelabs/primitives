@@ -174,12 +174,8 @@ pub enum ProposalType<AccountId, BlockNumber> {
     Mint(Mint<AccountId>),
     /// Burn tokens on-chain
     Withdrawal(Withdrawal<AccountId, BlockNumber>),
-    /// Add new quorum member
-    AddQuorumMember(AccountId),
-    /// Add new quorum member
-    RemoveQuorumMember(AccountId),
-    /// Update threshold
-    UpdateThreshold(u16),
+    /// Update quorum configuration (members, threshold)
+    UpdateConfiguration(Vec<AccountId>, u16),
 }
 
 /// Proposal votes
