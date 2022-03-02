@@ -1,10 +1,7 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
-use codec::{Decode, Encode};
-use scale_info::{
-    prelude::{string::String, vec::Vec},
-    TypeInfo,
-};
+use codec::{Decode, Encode, MaxEncodedLen};
+use scale_info::{prelude::string::String, TypeInfo};
 use sp_runtime::{
     generic,
     traits::{BlakeTwo256, IdentifyAccount, Verify},
@@ -74,7 +71,19 @@ pub type EraIndex = u32;
 pub type SessionIndex = u64;
 
 /// Enum indicating the currency. Tide is the native token.
-#[derive(Encode, Decode, TypeInfo, Eq, PartialEq, Copy, Clone, RuntimeDebug, PartialOrd, Ord)]
+#[derive(
+    Encode,
+    Decode,
+    TypeInfo,
+    MaxEncodedLen,
+    Eq,
+    PartialEq,
+    Copy,
+    Clone,
+    RuntimeDebug,
+    PartialOrd,
+    Ord,
+)]
 #[cfg_attr(feature = "std", derive(Serialize, Deserialize, Hash))]
 pub enum CurrencyId {
     Tide,
@@ -89,7 +98,7 @@ impl Default for CurrencyId {
 }
 
 /// Enum indicating status of the chain.
-#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone)]
+#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, MaxEncodedLen, Clone)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
 pub enum StatusCode {
@@ -106,7 +115,7 @@ impl Default for StatusCode {
 }
 
 /// Enum indicating compliance level of a deposit (mint) on-chain.
-#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone)]
+#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, MaxEncodedLen, Clone)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
 pub enum ComplianceLevel {
@@ -125,7 +134,7 @@ impl Default for ComplianceLevel {
 }
 
 /// Enum indicating on which action the watchlist item has been added
-#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone)]
+#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, MaxEncodedLen, Clone)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
 pub enum WatchListAction {
@@ -134,10 +143,10 @@ pub enum WatchListAction {
 }
 
 /// Withdrawal details.
-#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone)]
+#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, MaxEncodedLen, Clone)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
-pub struct WatchList<BlockNumber> {
+pub struct WatchList<BlockNumber, BoundedString> {
     /// Compliance level.
     pub compliance_level: ComplianceLevel,
     /// The Asset ID to watch.
@@ -145,7 +154,7 @@ pub struct WatchList<BlockNumber> {
     /// The amount of the action.
     pub amount: Balance,
     /// The transaction ID on the origin chain.
-    pub transaction_id: Vec<u8>,
+    pub transaction_id: BoundedString,
     /// The action the watch has
     pub watch_action: WatchListAction,
     /// The block ID the watch has been added.
@@ -153,7 +162,7 @@ pub struct WatchList<BlockNumber> {
 }
 
 /// Proposal status
-#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone)]
+#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, MaxEncodedLen, Clone)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
 pub enum ProposalStatus {
@@ -166,34 +175,36 @@ pub enum ProposalStatus {
 }
 
 /// Proposal type
-#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone)]
+#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, MaxEncodedLen, Clone)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
-pub enum ProposalType<AccountId, BlockNumber> {
+pub enum ProposalType<AccountId, BlockNumber, BoundedString, BoundedVecAccountId> {
     /// Mint tokens on-chain
-    Mint(Mint<AccountId>),
+    Mint(Mint<AccountId, BoundedString>),
     /// Burn tokens on-chain
-    Withdrawal(Withdrawal<AccountId, BlockNumber>),
+    Withdrawal(Withdrawal<AccountId, BlockNumber, BoundedString>),
     /// Update quorum configuration (members, threshold)
-    UpdateConfiguration(Vec<AccountId>, u16),
+    UpdateConfiguration(BoundedVecAccountId, u16),
 }
 
 /// Proposal votes
-#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone)]
+#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, MaxEncodedLen, Clone)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
-pub struct ProposalVotes<AccountId, BlockNumber> {
-    pub votes_for: Vec<AccountId>,
-    pub votes_against: Vec<AccountId>,
+pub struct ProposalVotes<BlockNumber, BoundedVecMaxVotesAccountId> {
+    pub votes_for: BoundedVecMaxVotesAccountId,
+    pub votes_against: BoundedVecMaxVotesAccountId,
     pub status: ProposalStatus,
     pub expiry: BlockNumber,
 }
 
-impl<AccountId, BlockNumber: Default> Default for ProposalVotes<AccountId, BlockNumber> {
+impl<BlockNumber: Default, BoundedVecMaxVotesAccountId: Default> Default
+    for ProposalVotes<BlockNumber, BoundedVecMaxVotesAccountId>
+{
     fn default() -> Self {
         Self {
-            votes_for: Vec::new(),
-            votes_against: Vec::new(),
+            votes_for: BoundedVecMaxVotesAccountId::default(),
+            votes_against: BoundedVecMaxVotesAccountId::default(),
             status: ProposalStatus::Initiated,
             expiry: BlockNumber::default(),
         }
@@ -201,10 +212,10 @@ impl<AccountId, BlockNumber: Default> Default for ProposalVotes<AccountId, Block
 }
 
 /// Withdrawal details.
-#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone)]
+#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, MaxEncodedLen, Clone)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
-pub struct Withdrawal<AccountId, BlockNumber> {
+pub struct Withdrawal<AccountId, BlockNumber, BoundedString> {
     /// Account ID requesting the withdrawal.
     pub account_id: AccountId,
     /// The Asset ID to widthdraw.
@@ -212,16 +223,16 @@ pub struct Withdrawal<AccountId, BlockNumber> {
     /// The amount of the asset to widthdraw.
     pub amount: Balance,
     /// The address on the AssetID chain where to send the funds.
-    pub external_address: Vec<u8>,
+    pub external_address: BoundedString,
     /// The block ID the withdrawal has been initialized.
     pub block_number: BlockNumber,
 }
 
 /// Mint details.
-#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone)]
+#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, MaxEncodedLen, Clone)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
-pub struct Mint<AccountId> {
+pub struct Mint<AccountId, BoundedString> {
     /// Account ID to mint to asset
     pub account_id: AccountId,
     /// The Asset ID to mint
@@ -229,13 +240,13 @@ pub struct Mint<AccountId> {
     /// The amount of the asset to add    
     pub mint_amount: Balance,
     /// The transaction ID on chain in bytes
-    pub transaction_id: Vec<u8>,
+    pub transaction_id: BoundedString,
     /// Compliance level of the original transaction
     pub compliance_level: ComplianceLevel,
 }
 
 /// Swap status.
-#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone)]
+#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, MaxEncodedLen, Clone)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
 pub enum SwapStatus {
@@ -252,7 +263,7 @@ pub enum SwapStatus {
 }
 
 /// Swap type
-#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone)]
+#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, MaxEncodedLen, Clone)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
 pub enum SwapType {
@@ -263,7 +274,7 @@ pub enum SwapType {
 }
 
 /// Swap details stored on-chain.
-#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone)]
+#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, MaxEncodedLen, Clone)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
 pub struct Swap<AccountId, BlockNumber> {
@@ -296,7 +307,7 @@ pub struct Swap<AccountId, BlockNumber> {
 }
 
 /// Market maker swap confirmation.
-#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone, Default)]
+#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, MaxEncodedLen, Clone, Default)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
 pub struct SwapConfirmation {
@@ -310,7 +321,7 @@ pub struct SwapConfirmation {
 }
 
 /// Stake details.
-#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone, Default)]
+#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, MaxEncodedLen, Clone, Default)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
 pub struct Stake<Balance, BlockNumber> {
@@ -333,7 +344,7 @@ pub struct Stake<Balance, BlockNumber> {
 }
 
 /// Stake currency meta.
-#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone, Default)]
+#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, MaxEncodedLen, Clone, Default)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
 pub struct StakeCurrencyMeta<Balance> {
@@ -344,14 +355,14 @@ pub struct StakeCurrencyMeta<Balance> {
 }
 
 /// Currency metadata.
-#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone, Default)]
+#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, MaxEncodedLen, Clone, Default)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
-pub struct CurrencyMetadata {
+pub struct CurrencyMetadata<BoundedString> {
     /// Name of the currency
-    pub name: Vec<u8>,
+    pub name: BoundedString,
     /// Initial balance
-    pub symbol: Vec<u8>,
+    pub symbol: BoundedString,
     /// Number of decimals for the currency
     pub decimals: u8,
     /// Currency is frozen on chain (can't transfer)
@@ -359,7 +370,7 @@ pub struct CurrencyMetadata {
 }
 
 /// Information regarding the active era (era in used in session).
-#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone, Default)]
+#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, MaxEncodedLen, Clone, Default)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
 pub struct ActiveEraInfo<BlockNumber> {
@@ -379,7 +390,7 @@ pub struct ActiveEraInfo<BlockNumber> {
 }
 
 /// Information regarding a fee
-#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone, Default)]
+#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, MaxEncodedLen, Clone, Default)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
 pub struct Fee {
@@ -390,7 +401,7 @@ pub struct Fee {
 }
 
 /// Currency balance.
-#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone, Default)]
+#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, MaxEncodedLen, Clone, Default)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
 pub struct CurrencyBalance<Balance> {
@@ -414,7 +425,7 @@ pub struct SwapExtrinsic {
 }
 
 pub mod pallet {
-    use super::{Balance, CurrencyId, Fee, Hash, SessionIndex, Swap, SwapType, Withdrawal};
+    use super::{Balance, CurrencyId, Fee, Hash, SessionIndex, Swap, SwapType};
     use scale_info::prelude::vec::Vec;
     use sp_runtime::{DispatchError, Permill};
     /// Quorum traits to share with pallets.
@@ -505,7 +516,7 @@ pub mod pallet {
     pub trait WraprExt {}
 }
 
-#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Default)]
+#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, MaxEncodedLen, Default)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
 pub struct BalanceInfo {
