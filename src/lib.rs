@@ -402,6 +402,19 @@ pub struct Fee {
     pub fee_usdt: Balance,
 }
 
+/// Sunrise swap pool
+#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, MaxEncodedLen, Clone, Default)]
+#[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
+#[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
+pub struct SunriseSwapPool {
+    /// Minimum size of the transaction before fees in USDT
+    pub minimum_usdt_value: Balance,
+    /// Transactions remaining: For each tier, there is a maximum number of transactions allocated to that tier
+    pub transactions_remaining: u32,
+    /// The amount of TIDE remaining in the pool
+    pub balance: Balance,
+}
+
 /// Currency balance.
 #[derive(Eq, PartialEq, Encode, Decode, TypeInfo, MaxEncodedLen, Clone, Default)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
