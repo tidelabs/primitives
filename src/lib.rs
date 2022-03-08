@@ -413,6 +413,8 @@ pub struct SunriseSwapPool {
     pub transactions_remaining: u32,
     /// The amount of TIDE remaining in the pool
     pub balance: Balance,
+    /// The rebates rewarded for this swap pool
+    pub rebates: Permill,
 }
 
 /// Currency balance.
