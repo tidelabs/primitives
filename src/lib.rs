@@ -398,6 +398,8 @@ pub struct Fee {
     pub amount: Balance,
     /// The fees at the moment of the transaction
     pub fee: Balance,
+    /// The fees at the moment of the transaction in USDT
+    pub fee_usdt: Balance,
 }
 
 /// Currency balance.
