@@ -407,6 +407,8 @@ pub struct Fee {
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
 pub struct SunriseSwapPool {
+    /// Sunrise pool unique identifier
+    pub id: u8,
     /// Minimum size of the transaction before fees in USDT
     pub minimum_usdt_value: Balance,
     /// Transactions remaining: For each tier, there is a maximum number of transactions allocated to that tier
