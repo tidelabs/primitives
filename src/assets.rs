@@ -1,5 +1,7 @@
 use crate::{AssetId, Balance, CurrencyId};
 use codec::alloc::string::{String, ToString};
+#[cfg(not(feature = "std"))]
+use sp_arithmetic::traits::Saturating;
 
 #[cfg(feature = "std")]
 use {
@@ -181,7 +183,6 @@ impl Asset {
 
     /// Saturating integer multiplication. Computes self * rhs, saturating at the numeric bounds instead of overflowing.
     /// By example, if you saturating_mul(10) with `BTC` it'll return `1_000_000_000`
-    #[cfg(feature = "std")]
     pub fn saturating_mul(&self, amount: Balance) -> Balance {
         amount.saturating_mul(10_u128.pow(self.exponent() as u32))
     }
