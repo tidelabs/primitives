@@ -517,7 +517,7 @@ pub mod pallet {
             currency_id: CurrencyId,
             total_amount_before_fees: Balance,
             is_market_maker: bool,
-        ) -> Fee;
+        ) -> Result<Fee, DispatchError>;
         /// Get the account if of the central wallet to make deposit
         fn account_id() -> AccountId;
     }
