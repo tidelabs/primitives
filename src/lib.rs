@@ -443,6 +443,18 @@ pub struct SwapExtrinsic {
     pub swap_fee_currency: CurrencyId,
 }
 
+/// Im Alive extrinsic submitted by Oracle every 5 blocks
+/// with an average of the USDT and TIDE marker for each currency.
+#[derive(Eq, PartialEq, TypeInfo, Clone)]
+#[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
+#[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
+pub struct OracleImAlive {
+    /// The USDT value for each currency
+    pub usdt_value: Vec<(CurrencyId, Balance)>,
+    /// The TIDE value for each asset
+    pub tide_value: Vec<(AssetId, Balance)>,
+}
+
 pub mod pallet {
     use super::{Balance, CurrencyId, Fee, Hash, SessionIndex, Swap, SwapType};
     use scale_info::prelude::vec::Vec;
