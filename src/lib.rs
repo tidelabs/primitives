@@ -448,7 +448,7 @@ pub struct SwapExtrinsic {
 
 /// Im Alive extrinsic submitted by Oracle every 5 blocks
 /// with an average of the USDT and TIDE marker for each currency.
-#[derive(Eq, PartialEq, TypeInfo, Clone)]
+#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone, Default)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
 pub struct OracleImAlive {
