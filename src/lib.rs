@@ -462,8 +462,6 @@ pub mod pallet {
 
     /// Oracle traits to share with pallets.
     pub trait OracleExt<AccountId, BlockNumber> {
-        /// Get current order book price reported by Oracle.
-        fn order_book_price(from: CurrencyId, to: CurrencyId) -> Result<Balance, DispatchError>;
         /// Get current Oracle status.
         fn is_oracle_enabled() -> bool;
         /// Check if the account is an official market maker.
@@ -504,6 +502,11 @@ pub mod pallet {
     }
 
     pub trait FeesExt<AccountId> {
+        /// Register order book price for sunrise pool
+        fn register_order_book_price(
+            prices: Vec<(CurrencyId, CurrencyId, Balance)>,
+        ) -> Result<(), DispatchError>;
+
         /// Calculate the fee to be deposited into the central wallet
         /// You have to reduce the amount by the returned value manually and
         /// deposit the funds into the wallet
