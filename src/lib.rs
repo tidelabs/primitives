@@ -1,7 +1,10 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
 use codec::{Decode, Encode, MaxEncodedLen};
-use scale_info::{prelude::string::String, TypeInfo};
+use scale_info::{
+    prelude::{string::String, vec::Vec},
+    TypeInfo,
+};
 use sp_runtime::{
     generic,
     traits::{BlakeTwo256, IdentifyAccount, Verify},
