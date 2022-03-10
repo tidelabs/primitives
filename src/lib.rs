@@ -462,7 +462,9 @@ pub mod pallet {
 
     /// Oracle traits to share with pallets.
     pub trait OracleExt<AccountId, BlockNumber> {
-        /// Get current Quorum status.
+        /// Get current order book price reported by Oracle.
+        fn order_book_price(from: CurrencyId, to: CurrencyId) -> Result<Balance, DispatchError>;
+        /// Get current Oracle status.
         fn is_oracle_enabled() -> bool;
         /// Check if the account is an official market maker.
         fn is_market_maker(account_id: AccountId) -> Result<bool, DispatchError>;
