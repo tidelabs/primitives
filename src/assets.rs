@@ -25,7 +25,6 @@ pub enum Asset {
     USDCoin,
 }
 
-#[cfg(feature = "std")]
 impl TryFrom<AssetId> for Asset {
     type Error = &'static str;
     fn try_from(asset: AssetId) -> Result<Asset, Self::Error> {
@@ -36,6 +35,22 @@ impl TryFrom<AssetId> for Asset {
             USDT => Ok(Asset::Tether),
             USDC => Ok(Asset::USDCoin),
             _ => Err("Invalid asset"),
+        }
+    }
+}
+
+impl TryFrom<CurrencyId> for Asset {
+    type Error = &'static str;
+    fn try_from(currency: CurrencyId) -> Result<Asset, Self::Error> {
+        match currency {
+            CurrencyId::Tide => Ok(Asset::Tide),
+            CurrencyId::Wrapped(asset) => match asset {
+                BTC => Ok(Asset::Bitcoin),
+                ETH => Ok(Asset::Ethereum),
+                USDT => Ok(Asset::Tether),
+                USDC => Ok(Asset::USDCoin),
+                _ => Err("Invalid asset"),
+            },
         }
     }
 }
