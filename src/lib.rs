@@ -8,7 +8,7 @@ use scale_info::{
 use sp_runtime::{
     generic,
     traits::{BlakeTwo256, IdentifyAccount, Verify},
-    MultiSignature, OpaqueExtrinsic, Permill, RuntimeDebug,
+    FixedU128, MultiSignature, OpaqueExtrinsic, Permill, RuntimeDebug,
 };
 
 pub mod assets;
@@ -418,8 +418,9 @@ pub struct SunriseSwapPool {
     pub transactions_remaining: u32,
     /// The amount of TIDE remaining in the pool
     pub balance: Balance,
-    /// The rebates rewarded for this swap pool
-    pub rebates: Permill,
+    /// The fixed point number from 0..to max.
+    /// Unlike `Percentage` it can be more than 1.
+    pub rebates: FixedU128,
 }
 
 /// Currency balance.
