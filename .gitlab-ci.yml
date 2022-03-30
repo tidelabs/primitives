@@ -1,0 +1,98 @@
+# .gitlab-ci.yml
+#
+# tidefi-primitives
+
+stages:
+  - test
+
+workflow:
+  rules:
+    - if: $CI_COMMIT_TAG
+    - if: $CI_COMMIT_BRANCH
+
+variables:
+  GIT_STRATEGY: fetch
+  GIT_DEPTH: 100
+  CI_SERVER_NAME: "GitLab CI"
+  CI_IMAGE: "tidelabs/tidechain-ci:latest"
+
+default:
+  cache: {}
+
+.docker-env: &docker-env
+  image: "${CI_IMAGE}"
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - unknown_failure
+      - api_failure
+  interruptible: true
+  tags:
+    - dv-Docker
+
+.compiler-info: &compiler-info
+  before_script:
+    - rustup show
+    - cargo --version
+    - sccache -s
+
+.auth-gitlab: &auth-gitlab
+  before_script:
+    - git config --global credential.helper store
+    - echo "https://gitlab-ci-token:${CI_JOB_TOKEN}@${GITLAB_DOMAIN}" > ~/.git-credentials
+    - git config --global url.ssh://git@github.com/.insteadOf https://github.com/
+    - "command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )"
+    - eval $(ssh-agent)
+    - ssh-add - <<< ${GITHUB_SSH_PRIV_KEY}
+    - mkdir ~/.ssh && touch ~/.ssh/known_hosts
+    - ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+
+.rules-test: &rules-test # these jobs run always*
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+    - if: $CI_COMMIT_REF_NAME == "dev"
+    - if: $CI_COMMIT_REF_NAME =~ /^[0-9]+$/ # PRs (Github issues)
+    - if: $CI_COMMIT_BRANCH =~ /^feat/ # Features
+    - if: $CI_COMMIT_BRANCH =~ /^chore/ # Chore
+    - if: $CI_COMMIT_BRANCH =~ /^fix/ # Fix
+
+cargo-fmt:
+  stage: test
+  <<: *docker-env
+  <<: *rules-test
+  script:
+    - cargo +nightly --version
+    - cargo +nightly fmt --all -- --check
+  allow_failure: true
+
+spellcheck:
+  stage: test
+  <<: *docker-env
+  <<: *rules-test
+  script:
+    - cargo spellcheck --version
+    # compare with the commit parent to the PR, given it's from a default branch
+    - git fetch origin +${CI_DEFAULT_BRANCH}:${CI_DEFAULT_BRANCH}
+    - echo "___Spellcheck is going to check your diff___"
+    - cargo spellcheck list-files -vvv $(git diff --diff-filter=AM --name-only $(git merge-base ${CI_COMMIT_SHA} ${CI_DEFAULT_BRANCH}))
+    - time cargo spellcheck check -vvv --cfg=scripts/gitlab/spellcheck.toml --checkers hunspell --code 1
+      $(git diff --diff-filter=AM --name-only $(git merge-base ${CI_COMMIT_SHA} ${CI_DEFAULT_BRANCH}))
+  allow_failure: true
+
+test-build-linux-stable:
+  stage: test
+  image: tidelabs/tools:latest
+  <<: *rules-test
+  <<: *docker-env
+  <<: *compiler-info
+  <<: *auth-gitlab
+  variables:
+    CARGO_NET_GIT_FETCH_WITH_CLI: "true"
+    RUST_TOOLCHAIN: stable
+    # Enable debug assertions since we are running optimized builds for testing
+    # but still want to have debug assertions.
+    RUSTFLAGS: "-Cdebug-assertions=y -Dwarnings"
+  script:
+    - ./scripts/gitlab/test_linux_stable.sh
+    - sccache -s
