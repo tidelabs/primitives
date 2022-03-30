@@ -1,12 +1,26 @@
-# Tidechain Primitives
+# Tidefi Primitives
 
-Low-level types used throughout the Tidechain code and clients.
+Low-level types used throughout the Tidefi ecosystem.
 
-## Generate Javascript
+## Generate JSON Schema
 
 ```
 cargo install --git https://github.com/tide-labs/primitives --force
 tidefi-primitives json -o ./dist
+```
+
+## Parse latest JSON Schema
+
+By example to view all supported assets:
+
+```
+curl -Ls https://github.com/tide-labs/primitives/releases/latest/download/assets.json | jq '.[] | [.id,.name,.abbr,.exponent]'
+```
+
+View available networks:
+
+```
+curl -Ls https://github.com/tide-labs/primitives/releases/latest/download/networks.json | jq '.[].name'
 ```
 
 #### License
