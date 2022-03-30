@@ -5,7 +5,7 @@ Low-level types used throughout the Tidechain code and clients.
 ## Generate Javascript
 
 ```
-cargo install --git https://github.com/tide-labs/tidefi-primitives --force
+cargo install --git https://github.com/tide-labs/primitives --force
 tidefi-primitives json -o ./dist
 ```
 
