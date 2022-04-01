@@ -5,7 +5,7 @@ Low-level types used throughout the Tidefi ecosystem.
 ## Generate JSON Schema
 
 ```
-cargo install --git https://github.com/tide-labs/primitives --force
+cargo install --git https://github.com/tidelabs/primitives --force
 tidefi-primitives json -o ./dist
 ```
 
@@ -14,13 +14,13 @@ tidefi-primitives json -o ./dist
 By example to view all supported assets:
 
 ```
-curl -Ls https://github.com/tide-labs/primitives/releases/latest/download/assets.json | jq '.[] | [.id,.name,.abbr,.exponent]'
+curl -Ls https://github.com/tidelabs/primitives/releases/latest/download/assets.json | jq '.[] | [.id,.name,.abbr,.exponent]'
 ```
 
 View available networks:
 
 ```
-curl -Ls https://github.com/tide-labs/primitives/releases/latest/download/networks.json | jq '.[].name'
+curl -Ls https://github.com/tidelabs/primitives/releases/latest/download/networks.json | jq '.[].name'
 ```
 
 #### License
