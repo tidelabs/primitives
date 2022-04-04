@@ -1,5 +1,6 @@
 [package]
 name = "tidefi-primitives-cli"
+authors = ["Semantic Network Team <publishers@tidelabs.org>"]
 version = "0.1.0"
 edition = "2021"
 
