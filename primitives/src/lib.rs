@@ -462,7 +462,7 @@ pub struct OracleImAlive {
   /// The USDT value for each currency
   pub usdt_value: Vec<(CurrencyId, Balance)>,
   /// The TIFI value for each asset
-  pub tide_value: Vec<(AssetId, Balance)>,
+  pub tifi_value: Vec<(AssetId, Balance)>,
 }
 
 pub mod pallet {
