@@ -89,20 +89,20 @@ pub type EraIndex = u32;
 /// Counter for the number of sessions that have passed.
 pub type SessionIndex = u64;
 
-/// Enum indicating the currency. Tide is the native token.
+/// Enum indicating the currency. Tifi is the native token.
 #[derive(
   Encode, Decode, TypeInfo, MaxEncodedLen, Eq, PartialEq, Copy, Clone, RuntimeDebug, PartialOrd, Ord,
 )]
 #[cfg_attr(feature = "std", derive(Serialize, Deserialize, Hash))]
 pub enum CurrencyId {
-  Tide,
+  Tifi,
   Wrapped(AssetId),
 }
 // default implementation but shouldn't be used please!
 // it's required for the substrate storage
 impl Default for CurrencyId {
   fn default() -> Self {
-    CurrencyId::Tide
+    CurrencyId::Tifi
   }
 }
 
@@ -422,7 +422,7 @@ pub struct SunriseSwapPool {
   pub minimum_usdt_value: Balance,
   /// Transactions remaining: For each tier, there is a maximum number of transactions allocated to that tier
   pub transactions_remaining: u32,
-  /// The amount of TIDE remaining in the pool
+  /// The amount of TIFI remaining in the pool
   pub balance: Balance,
   /// The fixed point number from 0..to max.
   /// Unlike `Percentage` it can be more than 1.
@@ -454,14 +454,14 @@ pub struct SwapExtrinsic {
 }
 
 /// `ImAlive` extrinsic submitted by Oracle every 5 blocks
-/// with an average of the USDT and TIDE marker for each currency.
+/// with an average of the USDT and TIFI marker for each currency.
 #[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone, Default)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
 pub struct OracleImAlive {
   /// The USDT value for each currency
   pub usdt_value: Vec<(CurrencyId, Balance)>,
-  /// The TIDE value for each asset
+  /// The TIFI value for each asset
   pub tide_value: Vec<(AssetId, Balance)>,
 }
 
