@@ -23,14 +23,14 @@ use tidefi_primitives::{assets::Asset, networks::Network, AssetId, CurrencyId};
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Serialize)]
 #[serde(tag = "type", content = "id")]
 pub enum BuildCurrencyId {
-  Tide,
+  Tifi,
   Wrapped(AssetId),
 }
 
 impl From<CurrencyId> for BuildCurrencyId {
   fn from(id: CurrencyId) -> Self {
     match id {
-      CurrencyId::Tide => Self::Tide,
+      CurrencyId::Tifi => Self::Tifi,
       CurrencyId::Wrapped(id) => Self::Wrapped(id),
     }
   }

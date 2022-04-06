@@ -141,7 +141,7 @@ pub fn expand(def: Def) -> proc_macro2::TokenStream {
       type Error = &'static str;
       fn try_from(currency: CurrencyId) -> Result<#enum_name, Self::Error> {
         match currency {
-          CurrencyId::Tide => Ok(#enum_name::Tide),
+          CurrencyId::Tifi => Ok(#enum_name::Tifi),
           CurrencyId::Wrapped(asset) => match asset {
             #(#try_from_asset_id2)*
             _ => Err("Invalid asset"),
@@ -160,8 +160,8 @@ pub fn expand(def: Def) -> proc_macro2::TokenStream {
 
       /// Return the `CurrencyId` used by different pallets for Tidechain
       pub fn currency_id(&self) -> CurrencyId {
-        if self == &Asset::Tide {
-          return CurrencyId::Tide;
+        if self == &Asset::Tifi {
+          return CurrencyId::Tifi;
         }
         CurrencyId::Wrapped(self.id())
       }
