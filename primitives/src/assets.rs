@@ -69,7 +69,7 @@ pub enum Asset {
 
   #[asset::id = 4]
   #[asset::symbol = "USDT"]
-  #[asset::name = "USD Coin"]
+  #[asset::name = "Tether"]
   #[asset::decimals = 6]
   #[asset::algo = "WEB3"]
   #[asset::base_chain = "Ethereum"]
@@ -79,7 +79,7 @@ pub enum Asset {
 
   #[asset::id = 5]
   #[asset::symbol = "USDC"]
-  #[asset::name = "Tether"]
+  #[asset::name = "USD Coin"]
   #[asset::decimals = 6]
   #[asset::algo = "WEB3"]
   #[asset::base_chain = "Ethereum"]
