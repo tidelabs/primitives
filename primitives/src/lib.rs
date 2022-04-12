@@ -532,6 +532,7 @@ pub mod pallet {
     fn calculate_swap_fees(
       currency_id: CurrencyId,
       total_amount_before_fees: Balance,
+      swap_type: SwapType,
       is_market_maker: bool,
     ) -> Fee;
     /// Register a new swap fees associated with the account for the current era.
@@ -540,6 +541,7 @@ pub mod pallet {
       account_id: AccountId,
       currency_id: CurrencyId,
       total_amount_before_fees: Balance,
+      swap_type: SwapType,
       is_market_maker: bool,
     ) -> Result<Fee, DispatchError>;
     /// Get the account if of the central wallet to make deposit
