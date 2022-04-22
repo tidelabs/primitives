@@ -12,7 +12,7 @@ path = "src/main.rs"
 serde = { version = "1.0.101" }
 serde_json = { version = "1.0" }
 strum = { version="0.23" }
-strum_macros = { version= "0.23"}
+strum_macros = { version= "0.24"}
 tidefi-primitives = { path = "../primitives" }
 color-eyre = "0.5.11"
 structopt = "0.3.25"
