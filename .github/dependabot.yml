@@ -1,0 +1,9 @@
+version: 2
+updates:
+  - package-ecosystem: "cargo"
+    directory: "/"
+    ignore:
+      - dependency-name: "sp-*"
+
+    schedule:
+      interval: "daily"
