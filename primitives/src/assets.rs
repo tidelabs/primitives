@@ -36,13 +36,13 @@ pub enum Algo {
 #[assets]
 pub enum Asset {
   #[asset::id = 1]
-  #[asset::symbol = "TIFI"]
+  #[asset::symbol = "TDFY"]
   #[asset::name = "Tidefi Token"]
   #[asset::decimals = 12]
   #[asset::algo = "SR25519"]
   #[asset::min_stake = 10_000_000_000_000]
   #[asset::max_stake = 500_000_000_000_000_000]
-  Tifi,
+  Tdfy,
 
   #[asset::id = 2]
   #[asset::symbol = "BTC"]
@@ -94,7 +94,7 @@ mod tests {
   #[test]
   fn test_saturation_of_assets() {
     assert_eq!(Asset::Bitcoin.saturating_mul(10), 1_000_000_000);
-    assert_eq!(Asset::Tifi.saturating_mul(912), 912_000_000_000_000);
+    assert_eq!(Asset::Tdfy.saturating_mul(912), 912_000_000_000_000);
     assert_eq!(
       Asset::USDCoin.saturating_mul(838_912_012),
       838_912_012_000_000
