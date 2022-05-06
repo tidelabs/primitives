@@ -23,7 +23,7 @@ use strum_macros::EnumIter;
 pub enum Network {
   Local,
   Devnet,
-  Sandbox,
+  Staging,
   Testnet,
   Mainnet,
 }
@@ -39,8 +39,8 @@ impl FromStr for Network {
       return Ok(Network::Local);
     } else if s.to_lowercase() == "devnet" {
       return Ok(Network::Devnet);
-    } else if s.to_lowercase() == "sandbox" {
-      return Ok(Network::Sandbox);
+    } else if s.to_lowercase() == "staging" {
+      return Ok(Network::Staging);
     } else if s.to_lowercase() == "testnet" {
       return Ok(Network::Testnet);
     } else if s.to_lowercase() == "mainnet" {
@@ -55,7 +55,7 @@ impl std::fmt::Display for Network {
     match self {
       Self::Local => write!(f, "local"),
       Self::Devnet => write!(f, "devnet"),
-      Self::Sandbox => write!(f, "sandbox"),
+      Self::Staging => write!(f, "staging"),
       Self::Testnet => write!(f, "testnet"),
       Self::Mainnet => write!(f, "mainnet"),
     }
@@ -68,7 +68,7 @@ impl Asset {
       let mut ids = BTreeMap::new();
       ids.insert("local".to_string(), 1337);
       ids.insert("devnet".to_string(), 3);
-      ids.insert("sandbox".to_string(), 3);
+      ids.insert("staging".to_string(), 3);
       ids.insert("testnet".to_string(), 3);
       ids.insert("mainnet".to_string(), 1);
       return Some(ids);
@@ -80,7 +80,7 @@ impl Asset {
       return Some(str_map(vec![
         ("local", "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512"),
         ("devnet", "0xae8a6463bf8449e6b5ee8277924cd6132b809be4"),
-        ("sandbox", "0xaa57cd19ae5ed73ea4be754051eb5933d1efd7e0"),
+        ("staging", "0xaa57cd19ae5ed73ea4be754051eb5933d1efd7e0"),
         ("testnet", "0xe72b6a5f4cc34dfa68e08f82d6d16055a513842a"),
       ]));
     }
@@ -91,7 +91,7 @@ impl Asset {
       return Some(str_map(vec![
         ("local", "0x5fc8d32690cc91d4c39d9d3abcbd16989f875707"),
         ("devnet", "0x971c11eb24778bf6824c82f0e82d6530bdeff7a2"),
-        ("sandbox", "0x86c5be5c0e24a32db15f9b1a6cadd1ba7cbcc031"),
+        ("staging", "0x86c5be5c0e24a32db15f9b1a6cadd1ba7cbcc031"),
         ("testnet", "0x3ac021006623ee9faa870d24545a04ca55371ed0"),
       ]));
     }
@@ -103,13 +103,13 @@ impl Asset {
       return Some(str_map(vec![
         ("local", "0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0"),
         ("devnet", "0xb604ee489aa63aef787a652c606db750b4793e65"),
-        ("sandbox", "0xdd60d69de8e211dcaa264142a10e534a68d4ef9d"),
+        ("staging", "0xdd60d69de8e211dcaa264142a10e534a68d4ef9d"),
         ("testnet", "0xb4740c0dbedff01cf2e5b41a21681deec63aaf63"),
       ]));
     } else if self == &Asset::USDCoin {
       return Some(str_map(vec![
         ("devnet", "0xf4197f30c8268c933ea57f85c1206e348b54c467"),
-        ("sandbox", "0x4170e38d4830f228e3c6e019ad92a29c319c56c2"),
+        ("staging", "0x4170e38d4830f228e3c6e019ad92a29c319c56c2"),
         ("testnet", "0x8462f6248165ddfbf101b8e8420252e152ec69d6"),
       ]));
     }
