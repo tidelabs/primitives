@@ -81,7 +81,7 @@ impl Asset {
         ("local", "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512"),
         ("devnet", "0xae8a6463bf8449e6b5ee8277924cd6132b809be4"),
         ("staging", "0xaa57cd19ae5ed73ea4be754051eb5933d1efd7e0"),
-        ("testnet", "0xe72b6a5f4cc34dfa68e08f82d6d16055a513842a"),
+        ("testnet", "0xed2CEEc810ed7E82C062de47a3F40c2D9c4C2FB3"),
       ]));
     }
     None
@@ -92,7 +92,7 @@ impl Asset {
         ("local", "0x5fc8d32690cc91d4c39d9d3abcbd16989f875707"),
         ("devnet", "0x971c11eb24778bf6824c82f0e82d6530bdeff7a2"),
         ("staging", "0x86c5be5c0e24a32db15f9b1a6cadd1ba7cbcc031"),
-        ("testnet", "0x3ac021006623ee9faa870d24545a04ca55371ed0"),
+        ("testnet", "0x38Ff6dc66c357A4a39Edf855c7AdbF7690E2535a"),
       ]));
     }
     None
@@ -104,13 +104,13 @@ impl Asset {
         ("local", "0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0"),
         ("devnet", "0xb604ee489aa63aef787a652c606db750b4793e65"),
         ("staging", "0xdd60d69de8e211dcaa264142a10e534a68d4ef9d"),
-        ("testnet", "0xb4740c0dbedff01cf2e5b41a21681deec63aaf63"),
+        ("testnet", "0x39638da09cc3462e32094404d6f1ebe7e7adfd26"),
       ]));
     } else if self == &Asset::USDCoin {
       return Some(str_map(vec![
         ("devnet", "0xf4197f30c8268c933ea57f85c1206e348b54c467"),
         ("staging", "0x4170e38d4830f228e3c6e019ad92a29c319c56c2"),
-        ("testnet", "0x8462f6248165ddfbf101b8e8420252e152ec69d6"),
+        ("testnet", "0xa2a1cb09e7cc9aac4b6969d3876d64f71b5ac7a6"),
       ]));
     }
     None
