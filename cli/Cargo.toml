@@ -11,7 +11,7 @@ path = "src/main.rs"
 [dependencies]
 serde = { version = "1.0.101" }
 serde_json = { version = "1.0" }
-strum = { version="0.23" }
+strum = { version="0.24" }
 strum_macros = { version= "0.23"}
 tidefi-primitives = { path = "../primitives" }
 color-eyre = "0.5.11"
