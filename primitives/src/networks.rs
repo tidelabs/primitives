@@ -108,6 +108,7 @@ impl Asset {
       ]));
     } else if self == &Asset::USDCoin {
       return Some(str_map(vec![
+        ("local", "0xa513e6e4b8f2a923d98304ec87f64353c4d5c853"),
         ("devnet", "0xf4197f30c8268c933ea57f85c1206e348b54c467"),
         ("staging", "0x4170e38d4830f228e3c6e019ad92a29c319c56c2"),
         ("testnet", "0xa2a1cb09e7cc9aac4b6969d3876d64f71b5ac7a6"),
