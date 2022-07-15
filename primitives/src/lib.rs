@@ -454,13 +454,11 @@ pub struct SwapExtrinsic {
 }
 
 /// `ImAlive` extrinsic submitted by Oracle every 5 blocks
-/// with an average of the USDT and TDFY marker for each currency.
+/// with an average of the TDFY marker for each currency.
 #[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone, Default)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
 pub struct OracleImAlive {
-  /// The USDT value for each currency
-  pub usdt_value: Vec<(CurrencyId, Balance)>,
   /// The TDFY value for each asset
   pub tdfy_value: Vec<(AssetId, Balance)>,
 }
