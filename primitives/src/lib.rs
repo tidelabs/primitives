@@ -17,10 +17,7 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
 use codec::{Decode, Encode, MaxEncodedLen};
-use scale_info::{
-  prelude::{string::String, vec::Vec},
-  TypeInfo,
-};
+use scale_info::{prelude::string::String, TypeInfo};
 use sp_runtime::{
   generic,
   traits::{BlakeTwo256, IdentifyAccount, Verify},
@@ -246,8 +243,10 @@ pub struct Mint<AccountId, BoundedString> {
   pub account_id: AccountId,
   /// The Asset ID to mint
   pub currency_id: CurrencyId,
-  /// The amount of the asset to add    
+  /// The amount of `CurrencyId` to mint    
   pub mint_amount: Balance,
+  /// The amount of `CurrencyId` paid in gas fee for the deposit
+  pub gas_amount: Option<Balance>,
   /// The transaction ID on chain in bytes
   pub transaction_id: BoundedString,
   /// Compliance level of the original transaction
@@ -407,8 +406,8 @@ pub struct Fee {
   pub amount: Balance,
   /// The fees at the moment of the transaction
   pub fee: Balance,
-  /// The fees at the moment of the transaction in USDT
-  pub fee_usdt: Balance,
+  /// The fees at the moment of the transaction in TDFY's
+  pub fee_tdfy: Balance,
 }
 
 /// Sunrise swap pool
@@ -451,18 +450,6 @@ pub struct SwapExtrinsic {
   pub swap_fee: Balance,
   /// The currency the swap fees are taken
   pub swap_fee_currency: CurrencyId,
-}
-
-/// `ImAlive` extrinsic submitted by Oracle every 5 blocks
-/// with an average of the USDT and TDFY marker for each currency.
-#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, Clone, Default)]
-#[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
-#[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
-pub struct OracleImAlive {
-  /// The USDT value for each currency
-  pub usdt_value: Vec<(CurrencyId, Balance)>,
-  /// The TDFY value for each asset
-  pub tdfy_value: Vec<(AssetId, Balance)>,
 }
 
 pub mod pallet {
