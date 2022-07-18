@@ -417,8 +417,8 @@ pub struct Fee {
 pub struct SunriseSwapPool {
   /// Sunrise pool unique identifier
   pub id: u8,
-  /// Minimum size of the transaction before fees in USDT
-  pub minimum_usdt_value: Balance,
+  /// Minimum size of the transaction before fees in TDFY's
+  pub minimum_tdfy_value: Balance,
   /// Transactions remaining: For each tier, there is a maximum number of transactions allocated to that tier
   pub transactions_remaining: u32,
   /// The amount of TDFY remaining in the pool
