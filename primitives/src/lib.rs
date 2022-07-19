@@ -428,6 +428,17 @@ pub struct SunriseSwapPool {
   pub rebates: FixedU128,
 }
 
+/// Sunrise Onboarding rebates
+#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, MaxEncodedLen, Clone, Default)]
+#[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
+#[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
+pub struct OnboardingRebates {
+  /// Initial pool size
+  pub initial_amount: Balance,
+  /// Available pool size
+  pub available_amount: Balance,
+}
+
 /// Currency balance.
 #[derive(Eq, PartialEq, Encode, Decode, TypeInfo, MaxEncodedLen, Clone, Default)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
@@ -453,7 +464,9 @@ pub struct SwapExtrinsic {
 }
 
 pub mod pallet {
-  use super::{Balance, CurrencyId, Fee, Hash, SessionIndex, Swap, SwapType};
+  use super::{
+    ActiveEraInfo, AssetId, Balance, CurrencyId, EraIndex, Fee, Hash, SessionIndex, Swap, SwapType,
+  };
   use scale_info::prelude::vec::Vec;
   use sp_runtime::{DispatchError, Permill};
   /// Quorum traits to share with pallets.
@@ -507,13 +520,8 @@ pub mod pallet {
     fn is_currency_enabled(currency_id: CurrencyId) -> bool;
   }
 
-  pub trait FeesExt<AccountId> {
-    /// Register order book price for sunrise pool
-    fn register_order_book_price(
-      prices: Vec<(CurrencyId, CurrencyId, Balance)>,
-    ) -> Result<(), DispatchError>;
-
-    /// Calculate the fee to be deposited into the central wallet
+  pub trait FeesExt<AccountId, BlockNumber> {
+    /// Calculate the fee to be deposited into the `account_id()` wallet
     /// You have to reduce the amount by the returned value manually and
     /// deposit the funds into the wallet
     fn calculate_swap_fees(
@@ -522,6 +530,7 @@ pub mod pallet {
       swap_type: SwapType,
       is_market_maker: bool,
     ) -> Fee;
+
     /// Register a new swap fees associated with the account for the current era.
     /// A percentage of the network profits will be re-distributed to the account at the end of the era.
     fn register_swap_fees(
@@ -531,8 +540,50 @@ pub mod pallet {
       swap_type: SwapType,
       is_market_maker: bool,
     ) -> Result<Fee, DispatchError>;
-    /// Get the account if of the central wallet to make deposit
+
+    /// Get the account where the Swap fees are paid
     fn account_id() -> AccountId;
+
+    /// Get the active era for the DEX fees
+    fn current_era() -> Option<ActiveEraInfo<BlockNumber>>;
+  }
+
+  pub trait SunriseExt<AccountId, BlockNumber> {
+    /// Register TDFY's price for sunrise pool
+    fn register_exchange_rate(prices: Vec<(AssetId, Balance)>) -> Result<(), DispatchError>;
+
+    /// Based ont the fee, try to allocate a new sunrise rewards for the `account_id` on the specified `era`.
+    fn try_allocate_rewards_for_swap(
+      account_id: &AccountId,
+      era: EraIndex,
+      fee: &Fee,
+      currency_id: CurrencyId,
+    ) -> Result<Option<Balance>, DispatchError>;
+
+    /// Try to refunds the `amount` of `currency_id` for `account_id` in TDFY's.
+    fn try_refund_gas_for_deposit(
+      account_id: &AccountId,
+      currency_id: CurrencyId,
+      amount: Balance,
+    ) -> Result<Option<Balance>, DispatchError>;
+
+    /// Try to claim sunrise rewards for the `account_id` for the specified `era`.
+    fn try_claim_sunrise_rewards(
+      account_id: &AccountId,
+      era: EraIndex,
+    ) -> Result<(), DispatchError>;
+
+    /// Number of blocks to wait before allowing users to claim their sunrise rewards, after a specific fee era is completed.
+    fn cooldown_blocks_count() -> BlockNumber;
+
+    /// Get the account of the sunrise pool
+    fn account_id() -> AccountId;
+
+    /// Based on the `AssetExchangeRate` provided by Oracle, try to convert the `currency_id` balance to TDFY's.
+    fn try_get_tdfy_value(
+      currency_id: CurrencyId,
+      amount: Balance,
+    ) -> Result<Balance, DispatchError>;
   }
 
   pub trait StakingExt<AccountId> {
