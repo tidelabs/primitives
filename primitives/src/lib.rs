@@ -349,6 +349,8 @@ pub struct Stake<Balance, BlockNumber> {
   pub principal: Balance,
   /// Duration of the stake
   pub duration: BlockNumber,
+  /// Stake status
+  pub status: StakeStatus<BlockNumber>,
 }
 
 /// Stake currency meta.
@@ -360,6 +362,23 @@ pub struct StakeCurrencyMeta<Balance> {
   pub minimum_amount: Balance,
   /// Maximum stake amount for this currency.
   pub maximum_amount: Balance,
+}
+
+/// Stake status
+#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, MaxEncodedLen, Clone)]
+#[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
+#[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
+pub enum StakeStatus<BlockNumber> {
+  /// Stake is active
+  Staked,
+  /// Stake is pending unlock
+  PendingUnlock(BlockNumber),
+}
+
+impl<BlockNumber> Default for StakeStatus<BlockNumber> {
+  fn default() -> Self {
+    StakeStatus::Staked
+  }
 }
 
 /// Currency metadata.
