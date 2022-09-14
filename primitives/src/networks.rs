@@ -32,6 +32,8 @@ pub type Addresses = BTreeMap<String, String>;
 
 pub type ChainIds = BTreeMap<String, u32>;
 
+pub type Enabled = BTreeMap<String, bool>;
+
 impl FromStr for Network {
   type Err = String;
   fn from_str(s: &str) -> Result<Self, Self::Err> {
@@ -75,6 +77,7 @@ impl Asset {
     }
     None
   }
+
   pub fn router(&self) -> Option<Addresses> {
     if self == &Asset::Ethereum {
       return Some(str_map(vec![
@@ -86,6 +89,7 @@ impl Asset {
     }
     None
   }
+
   pub fn multisig(&self) -> Option<Addresses> {
     if self == &Asset::Ethereum {
       return Some(str_map(vec![
@@ -116,12 +120,60 @@ impl Asset {
     }
     None
   }
+
+  pub fn enabled(&self) -> Enabled {
+    match self {
+      Asset::Tdfy => bool_map(vec![
+        ("local", true),
+        ("devnet", true),
+        ("staging", true),
+        ("testnet", true),
+        ("mainnet", true),
+      ]),
+      Asset::Bitcoin => bool_map(vec![
+        ("local", true),
+        ("devnet", true),
+        ("staging", true),
+        ("testnet", true),
+        ("mainnet", true),
+      ]),
+      Asset::Ethereum => bool_map(vec![
+        ("local", true),
+        ("devnet", true),
+        ("staging", true),
+        ("testnet", true),
+        ("mainnet", true),
+      ]),
+      Asset::Tether => bool_map(vec![
+        ("local", true),
+        ("devnet", true),
+        ("staging", true),
+        ("testnet", false),
+        ("mainnet", false),
+      ]),
+      Asset::USDCoin => bool_map(vec![
+        ("local", true),
+        ("devnet", true),
+        ("staging", true),
+        ("testnet", true),
+        ("mainnet", true),
+      ]),
+    }
+  }
 }
 
 fn str_map(inp: Vec<(&str, &str)>) -> BTreeMap<String, String> {
   let mut r = BTreeMap::new();
   for (one, two) in inp {
     r.insert(one.to_string(), two.to_string());
+  }
+  r
+}
+
+fn bool_map(inp: Vec<(&str, bool)>) -> BTreeMap<String, bool> {
+  let mut r = BTreeMap::new();
+  for (one, two) in inp {
+    r.insert(one.to_string(), two);
   }
   r
 }

@@ -57,6 +57,7 @@ struct IToken {
   asset_address: Option<BTreeMap<String, String>>,
   #[serde(skip_serializing_if = "Option::is_none")]
   chain_id: Option<BTreeMap<String, u32>>,
+  enabled: BTreeMap<String, bool>,
 }
 
 #[derive(Serialize)]
@@ -83,6 +84,7 @@ fn build_assets(output: Option<PathBuf>) {
       multisig_address: None,
       asset_address: None,
       chain_id: None,
+      enabled: BTreeMap::new(),
     };
     if let Some(bc) = asset.base_chain() {
       token.base_chain = Some(f(bc));
@@ -91,6 +93,7 @@ fn build_assets(output: Option<PathBuf>) {
     token.multisig_address = asset.multisig();
     token.asset_address = asset.address();
     token.chain_id = asset.chain_id();
+    token.enabled = asset.enabled();
     tokens.push(token)
   }
   let tz = serde_json::to_string_pretty(&tokens).unwrap();
