@@ -69,7 +69,7 @@ impl Asset {
     if self == &Asset::Ethereum {
       let mut ids = BTreeMap::new();
       ids.insert("local".to_string(), 1337);
-      ids.insert("devnet".to_string(), 3);
+      ids.insert("devnet".to_string(), 5);
       ids.insert("staging".to_string(), 5);
       ids.insert("testnet".to_string(), 5);
       ids.insert("mainnet".to_string(), 1);
@@ -82,7 +82,7 @@ impl Asset {
     if self == &Asset::Ethereum {
       return Some(str_map(vec![
         ("local", "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512"),
-        ("devnet", "0xae8a6463bf8449e6b5ee8277924cd6132b809be4"),
+        ("devnet", "0x3b446e2eeb7a8171bd3a41452b22971e7d17aa80"),
         ("staging", "0xeed55a8e858d98371330d990358360ee36eeee6f"),
         ("testnet", "0x9d300e8b5991acabe98734dd0f0877d648cf11c6"),
         ("mainnet", "0x8f4b7bef83d6e2ef0d8bb23db8dbf7f9f2c69729"),
@@ -95,7 +95,7 @@ impl Asset {
     if self == &Asset::Ethereum {
       return Some(str_map(vec![
         ("local", "0x5fc8d32690cc91d4c39d9d3abcbd16989f875707"),
-        ("devnet", "0x971c11eb24778bf6824c82f0e82d6530bdeff7a2"),
+        ("devnet", "0x22f3f691392c1d6c2c96b2333f08ccf0354f97b4"),
         ("staging", "0xe10ccf75d9bd5e2e64568c2e85c91e9005bb5dc5"),
         ("testnet", "0x05fadc62c72ded19387613664dc245e03c8da9b8"),
         ("mainnet", "0xff9d5585592507eff86d76cd9134a78e69786aa3"),
@@ -108,7 +108,7 @@ impl Asset {
     if self == &Asset::Tether {
       return Some(str_map(vec![
         ("local", "0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0"),
-        ("devnet", "0xb604ee489aa63aef787a652c606db750b4793e65"),
+        ("devnet", "0x3fcbcc5df304cebfc3804dc8e70addf60cb05a1b"),
         ("staging", "0x348484e4a9a95dbd667398fe4f4fa6d4aaae4e18"),
         ("testnet", "0x74f8f1ba33f7def42ad29aba793c69497e512d2d"),
         ("mainnet", "0xdAC17F958D2ee523a2206206994597C13D831ec7"),
@@ -116,7 +116,7 @@ impl Asset {
     } else if self == &Asset::USDCoin {
       return Some(str_map(vec![
         ("local", "0xa513e6e4b8f2a923d98304ec87f64353c4d5c853"),
-        ("devnet", "0xf4197f30c8268c933ea57f85c1206e348b54c467"),
+        ("devnet", "0x71819a038e02c521db8005936b3883cecfd886c0"),
         ("staging", "0x34c7391130c375fbbef15d8bc16907f001ad8cbd"),
         ("testnet", "0xbce2733e4b0eb15278ebb9f8496d3c638d1f43dd"),
         ("mainnet", "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"),
