@@ -84,7 +84,7 @@ impl Asset {
         ("local", "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512"),
         ("devnet", "0x3b446e2eeb7a8171bd3a41452b22971e7d17aa80"),
         ("staging", "0xeed55a8e858d98371330d990358360ee36eeee6f"),
-        ("testnet", "0x9d300e8b5991acabe98734dd0f0877d648cf11c6"),
+        ("testnet", "0xa16ccb4c3911be7c6adc115ec5e529f5ab0abf9d"),
         ("mainnet", "0x8f4b7bef83d6e2ef0d8bb23db8dbf7f9f2c69729"),
       ]));
     }
@@ -97,7 +97,7 @@ impl Asset {
         ("local", "0x5fc8d32690cc91d4c39d9d3abcbd16989f875707"),
         ("devnet", "0x22f3f691392c1d6c2c96b2333f08ccf0354f97b4"),
         ("staging", "0xe10ccf75d9bd5e2e64568c2e85c91e9005bb5dc5"),
-        ("testnet", "0x05fadc62c72ded19387613664dc245e03c8da9b8"),
+        ("testnet", "0x2d6d7a1715470d0377ed038f5674f76fbfa0db75"),
         ("mainnet", "0xff9d5585592507eff86d76cd9134a78e69786aa3"),
       ]));
     }
