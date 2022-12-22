@@ -540,6 +540,9 @@ pub mod pallet {
   }
 
   pub trait FeesExt<AccountId, BlockNumber> {
+    /// How many block per era (Eq; sessions_per_era * block_per_sessions)
+    fn era_blocks_count() -> BlockNumber;
+
     /// Calculate the fee to be deposited into the `account_id()` wallet
     /// You have to reduce the amount by the returned value manually and
     /// deposit the funds into the wallet
