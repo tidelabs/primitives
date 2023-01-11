@@ -86,6 +86,15 @@ pub enum Asset {
   #[asset::min_stake = 1_000_000]
   #[asset::max_stake = 100_000_000_000]
   USDCoin,
+
+  #[asset::id = 6]
+  #[asset::symbol = "ATH"]
+  #[asset::name = "All Time High"]
+  #[asset::decimals = 12]
+  #[asset::algo = "SR25519"]
+  #[asset::min_stake = 10_000_000_000_000]
+  #[asset::max_stake = 500_000_000_000_000_000]
+  AllTimeHigh,
 }
 
 #[cfg(test)]
