@@ -162,6 +162,13 @@ impl Asset {
         ("testnet", true),
         ("mainnet", true),
       ]),
+      Asset::AllTimeHigh => bool_map(vec![
+        ("local", true),
+        ("devnet", true),
+        ("staging", true),
+        ("testnet", false),
+        ("mainnet", false),
+      ]),
     }
   }
 }
