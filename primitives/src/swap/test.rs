@@ -212,7 +212,7 @@ test!(
   // 5.9 ETH
   Asset::Ethereum
     .saturating_mul(6)
-    .saturating_add(100_000_000_000_000_000),
+    .saturating_sub(100_000_000_000_000_000),
   Asset::Bitcoin.currency_id(),
   // 0.9 BTC
   Asset::Bitcoin.saturating_mul(1).saturating_sub(10_000_000)

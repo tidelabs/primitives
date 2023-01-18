@@ -1,0 +1,45 @@
+name: Run nightly fuzzer jobs
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch
+
+jobs:
+  primitives-fuzzer:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+
+      - name: Install minimal stable Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+
+      - name: Install minimal nightly Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: nightly
+
+      - name: Install honggfuzz deps
+        run: sudo apt-get install --no-install-recommends binutils-dev libunwind8-dev
+
+      - name: Install honggfuzz
+        uses: actions-rs/cargo@v1
+        with:
+          command: install
+          args: honggfuzz --version "0.5.54"
+
+      - name: Build fuzzer binaries
+        working-directory: fuzzer/
+        run: cargo hfuzz build
+
+      - name: Run fuzzer
+        working-directory: fuzzer/
+        run: bash $GITHUB_WORKSPACE/scripts/github/run_fuzzer.sh primitives-fuzzer
