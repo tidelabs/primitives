@@ -1,0 +1,13 @@
+[package]
+name = "primitives-fuzzer"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+honggfuzz = "0.5"
+tidefi-primitives = { path = "../primitives" }
+sp-arithmetic = { default-features = false, git = "https://github.com/tidelabs/substrate", branch = "tidechain" }
+
+[[bin]]
+path = "src/fuzz.rs"
+name = "primitives-fuzzer"
