@@ -232,7 +232,7 @@ impl<AccountId: Clone, BlockNumber: Clone> Swap<AccountId, BlockNumber> {
 
     // limit order can match with smaller price
     if self.swap_type != SwapType::Limit {
-      if pay_per_token_lower_bond.gt(&pay_per_token_offered) {
+      if pay_per_token_offered.lt(&pay_per_token_lower_bond) {
         if self.is_market_maker {
           return Err(SlippageError::OfferIsLessThanMarketMakerSwapLowerBound);
         } else {
@@ -241,7 +241,7 @@ impl<AccountId: Clone, BlockNumber: Clone> Swap<AccountId, BlockNumber> {
       }
     }
 
-    if pay_per_token_upper_bond.lt(&pay_per_token_offered) {
+    if pay_per_token_offered.gt(&pay_per_token_upper_bond) {
       if self.is_market_maker {
         return Err(SlippageError::OfferIsGreaterThanMarketMakerSwapUpperBound);
       } else {
