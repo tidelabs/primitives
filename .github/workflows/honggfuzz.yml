@@ -34,7 +34,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: install
-          args: honggfuzz --version "0.5.54"
+          args: honggfuzz --version "0.5.55"
 
       - name: Build fuzzer binaries
         working-directory: fuzzer/
