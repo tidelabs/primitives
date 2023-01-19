@@ -14,12 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with tidefi-primitives.  If not, see <http://www.gnu.org/licenses/>.
 
+use crate::{
+  Asset, Balance, CurrencyId, Decode, Encode, FixedU128, Hash, MaxEncodedLen, Permill, TypeInfo,
+};
+use codec::alloc::string::String;
 use sp_arithmetic::{traits::CheckedDiv, FixedPointNumber};
 
-use crate::{
-  Asset, Balance, CurrencyId, Decode, Deserialize, Encode, FixedU128, Hash, MaxEncodedLen, Permill,
-  Serialize, TypeInfo,
-};
+#[cfg(feature = "std")]
+use serde::{Deserialize, Serialize};
 
 /// Swap status.
 #[derive(Eq, PartialEq, Encode, Decode, TypeInfo, MaxEncodedLen, Clone)]
