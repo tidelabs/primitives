@@ -528,9 +528,12 @@ pub mod pallet {
     fn on_session_end(
       session_index: SessionIndex,
       session_trade_values: Vec<(CurrencyId, Balance)>,
+      fees_account_id: AccountId,
     ) -> Result<(), DispatchError>;
     /// Get the staking account id where the funds are transfered
     fn account_id() -> AccountId;
+    /// Get the size of `AccountStakes`, used to predict the weight of `on_session_end`
+    fn account_stakes_size() -> u64;
   }
 
   pub trait WraprExt {}
