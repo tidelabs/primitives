@@ -15,7 +15,8 @@
 // along with tidefi-primitives.  If not, see <http://www.gnu.org/licenses/>.
 
 use crate::{
-  AccountId, Asset, Balance, BlockNumber, CurrencyId, Decode, Encode, FixedU128, Hash, MaxEncodedLen, Permill, TypeInfo,
+  AccountId, Asset, Balance, BlockNumber, CurrencyId, Decode, Encode, FixedU128, Hash,
+  MaxEncodedLen, Permill, TypeInfo,
 };
 use codec::alloc::string::String;
 use sp_arithmetic::{traits::CheckedDiv, FixedPointNumber};
@@ -134,51 +135,55 @@ pub enum SlippageError {
   OfferIsGreaterThanSwapUpperBound,
   OfferIsLessThanMarketMakerSwapLowerBound,
   OfferIsGreaterThanMarketMakerSwapUpperBound,
-  NoLowerBoundForBuying,
-  NoUpperBoundForSelling,
+  NoLowerBoundForBuyingPrice,
+  NoUpperBoundForSellingPrice,
 }
 
 impl<AccountId: Clone, BlockNumber: Clone> Swap<AccountId, BlockNumber> {
-  pub fn pay_per_token_lower_bond(&self, market_pair: &MarketPair<CurrencyId>) -> Result<FixedU128, SlippageError> {
-    if self.token_from == market_pair.base_asset { // selling
-      return Ok(
-        self.pay_per_token(
-          |base_amount| base_amount,
-          |quote_amount| {
-            quote_amount
-              .checked_sub(self.slippage * quote_amount)
-              .ok_or(SlippageError::ArithmeticError)
-              .unwrap_or(quote_amount)
-          },
-          market_pair,
-          self.amount_from,
-          self.amount_to,          
-        )?
-      );
+  pub fn pay_per_token_lower_bond(
+    &self,
+    market_pair: &MarketPair<CurrencyId>,
+  ) -> Result<FixedU128, SlippageError> {
+    if self.token_from == market_pair.base_asset {
+      // selling
+      return Ok(self.pay_per_token(
+        |base_amount| base_amount,
+        |quote_amount| {
+          quote_amount
+            .checked_sub(self.slippage * quote_amount)
+            .ok_or(SlippageError::ArithmeticError)
+            .unwrap_or(quote_amount)
+        },
+        market_pair,
+        self.amount_from,
+        self.amount_to,
+      )?);
     }
-    
-    Err(SlippageError::NoLowerBoundForBuying)
+
+    Err(SlippageError::NoLowerBoundForBuyingPrice)
   }
 
-  pub fn pay_per_token_upper_bond(&self, market_pair: &MarketPair<CurrencyId>) -> Result<FixedU128, SlippageError> {
-    if self.token_to == market_pair.base_asset { // buying
-      return Ok(
-        self.pay_per_token(
-          |base_amount| base_amount,
-          |quote_amount| {
-            quote_amount
-              .checked_add(self.slippage * quote_amount)
-              .ok_or(SlippageError::ArithmeticError)
-              .unwrap_or(quote_amount)
-          },
-          market_pair,
-          self.amount_to,
-          self.amount_from,
-        )?
-      );
+  pub fn pay_per_token_upper_bond(
+    &self,
+    market_pair: &MarketPair<CurrencyId>,
+  ) -> Result<FixedU128, SlippageError> {
+    if self.token_to == market_pair.base_asset {
+      // buying
+      return Ok(self.pay_per_token(
+        |base_amount| base_amount,
+        |quote_amount| {
+          quote_amount
+            .checked_add(self.slippage * quote_amount)
+            .ok_or(SlippageError::ArithmeticError)
+            .unwrap_or(quote_amount)
+        },
+        market_pair,
+        self.amount_to,
+        self.amount_from,
+      )?);
     }
 
-    Err(SlippageError::NoUpperBoundForSelling)
+    Err(SlippageError::NoUpperBoundForSellingPrice)
   }
 
   fn pay_per_token<FT, FF>(
@@ -193,13 +198,15 @@ impl<AccountId: Clone, BlockNumber: Clone> Swap<AccountId, BlockNumber> {
     FT: Fn(Balance) -> Balance,
     FF: Fn(Balance) -> Balance,
   {
-    let base_asset: Asset = market_pair.base_asset
+    let base_asset: Asset = market_pair
+      .base_asset
       .try_into()
       .map_err(|_| SlippageError::UnknownAsset)?;
 
     let base_token_one_unit = base_asset.saturating_mul(1);
 
-    let quote_asset: Asset = market_pair.quote_asset
+    let quote_asset: Asset = market_pair
+      .quote_asset
       .try_into()
       .map_err(|_| SlippageError::UnknownAsset)?;
     let quote_token_one_unit = quote_asset.saturating_mul(1);
@@ -207,7 +214,7 @@ impl<AccountId: Clone, BlockNumber: Clone> Swap<AccountId, BlockNumber> {
     FixedU128::saturating_from_rational(quote_amount_closure(quote_amount), quote_token_one_unit)
       .checked_div(&FixedU128::saturating_from_rational(
         base_amount_closure(base_amount),
-        base_token_one_unit
+        base_token_one_unit,
       ))
       .ok_or(SlippageError::SlippageOverflow)
   }
@@ -217,7 +224,8 @@ impl<AccountId: Clone, BlockNumber: Clone> Swap<AccountId, BlockNumber> {
     price_offered: FixedU128,
     market_pair: &MarketPair<CurrencyId>,
   ) -> Result<(), SlippageError> {
-    if self.token_to == market_pair.base_asset { // buyer should not accept a price greater than upper bound
+    if self.token_to == market_pair.base_asset {
+      // buyer should not accept a price greater than upper bound
       let pay_per_token_upper_bond = self.pay_per_token_upper_bond(market_pair)?;
       if price_offered.gt(&pay_per_token_upper_bond) {
         if self.is_market_maker {
@@ -226,16 +234,16 @@ impl<AccountId: Clone, BlockNumber: Clone> Swap<AccountId, BlockNumber> {
           return Err(SlippageError::OfferIsGreaterThanSwapUpperBound);
         }
       }
-    } 
-    else {
+    } else {
       let pay_per_token_lower_bond = self.pay_per_token_lower_bond(market_pair)?;
-      if price_offered.lt(&pay_per_token_lower_bond) { // seller should not accept a price smaller than lower bound
+      if price_offered.lt(&pay_per_token_lower_bond) {
+        // seller should not accept a price smaller than lower bound
         if self.is_market_maker {
           return Err(SlippageError::OfferIsLessThanMarketMakerSwapLowerBound);
         } else {
           return Err(SlippageError::OfferIsLessThanSwapLowerBound);
         }
-      } 
+      }
     }
 
     Ok(())
@@ -254,34 +262,35 @@ impl<AccountId: Clone, BlockNumber: Clone> Swap<AccountId, BlockNumber> {
     offered_quote_amount: Balance,
     market_pair: &MarketPair<CurrencyId>,
   ) -> Result<(), SlippageError> {
-    let base_asset: Asset = market_pair.base_asset
+    let base_asset: Asset = market_pair
+      .base_asset
       .try_into()
       .map_err(|_| SlippageError::UnknownAsset)?;
     let base_asset_one_unit = base_asset.saturating_mul(1);
 
-    let quote_asset: Asset = market_pair.quote_asset
+    let quote_asset: Asset = market_pair
+      .quote_asset
       .try_into()
       .map_err(|_| SlippageError::UnknownAsset)?;
     let quote_asset_one_unit = quote_asset.saturating_mul(1);
 
-    let price_offered = 
+    let price_offered =
       FixedU128::saturating_from_rational(offered_quote_amount, quote_asset_one_unit)
-      .checked_div(&FixedU128::saturating_from_rational(
-        offered_base_amount,
-        base_asset_one_unit,
-      ))
-      .ok_or(SlippageError::SlippageOverflow)?;
+        .checked_div(&FixedU128::saturating_from_rational(
+          offered_base_amount,
+          base_asset_one_unit,
+        ))
+        .ok_or(SlippageError::SlippageOverflow)?;
 
     self.validate_slippage_dry_run(price_offered, market_pair)?;
 
-    market_maker_swap
-      .validate_slippage_dry_run(price_offered, market_pair)
+    market_maker_swap.validate_slippage_dry_run(price_offered, market_pair)
   }
 }
 
 impl MarketPair<CurrencyId> {
-  pub fn is_selling (&self, swap: &Swap<AccountId, BlockNumber>) -> Result<bool, SlippageError> {
-    if swap.token_from == self.base_asset{
+  pub fn is_selling(&self, swap: &Swap<AccountId, BlockNumber>) -> Result<bool, SlippageError> {
+    if swap.token_from == self.base_asset {
       Ok(true)
     } else if swap.token_from == self.quote_asset {
       Ok(false)

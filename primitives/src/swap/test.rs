@@ -19,10 +19,14 @@ macro_rules! assert_swap_work {
   ($market_order:expr, $limit_order:expr, $offer_base_amount:expr, $offer_quote_amount:expr, $market_pair:expr) => {{
     let one_percent = Permill::from_rational(1_u128, 100_u128);
     let one_millionth = Permill::from_rational(1_u128, 1_000_000_u128);
-    let offer_quote_amount_1percent_more = $offer_quote_amount.saturating_add(one_percent * $offer_quote_amount);
-    let offer_quote_amount_1percent_less = $offer_quote_amount.saturating_sub(one_percent * $offer_quote_amount);
-    let offer_quote_amount_excceded_upperbound = offer_quote_amount_1percent_more.saturating_add(one_millionth * $offer_quote_amount);
-    let offer_quote_amount_excceded_lowerbound = offer_quote_amount_1percent_less.saturating_sub(one_millionth * $offer_quote_amount);
+    let offer_quote_amount_1percent_more =
+      $offer_quote_amount.saturating_add(one_percent * $offer_quote_amount);
+    let offer_quote_amount_1percent_less =
+      $offer_quote_amount.saturating_sub(one_percent * $offer_quote_amount);
+    let offer_quote_amount_excceded_upperbound =
+      offer_quote_amount_1percent_more.saturating_add(one_millionth * $offer_quote_amount);
+    let offer_quote_amount_excceded_lowerbound =
+      offer_quote_amount_1percent_less.saturating_sub(one_millionth * $offer_quote_amount);
 
     // should pass with exact numbers
     assert_eq!(
@@ -65,12 +69,16 @@ macro_rules! assert_swap_work {
         offer_quote_amount_excceded_lowerbound,
         &$market_pair,
       ),
-      if ($market_pair.is_selling(&$limit_order).expect("market pair should be found in swap")
+      if ($market_pair
+        .is_selling(&$limit_order)
+        .expect("market pair should be found in swap")
         && $limit_order.is_market_maker)
-        || ($market_pair.is_selling(&$market_order).expect("market pair should be found in swap")
-        && $market_order.is_market_maker)
+        || ($market_pair
+          .is_selling(&$market_order)
+          .expect("market pair should be found in swap")
+          && $market_order.is_market_maker)
       {
-        Err(SlippageError::OfferIsLessThanMarketMakerSwapLowerBound)  
+        Err(SlippageError::OfferIsLessThanMarketMakerSwapLowerBound)
       } else {
         Err(SlippageError::OfferIsLessThanSwapLowerBound)
       }
@@ -84,10 +92,14 @@ macro_rules! assert_swap_work {
         offer_quote_amount_excceded_upperbound,
         &$market_pair,
       ),
-      if (!$market_pair.is_selling(&$limit_order).expect("market pair should be found in swap")
+      if (!$market_pair
+        .is_selling(&$limit_order)
+        .expect("market pair should be found in swap")
         && $limit_order.is_market_maker)
-        || (!$market_pair.is_selling(&$market_order).expect("market pair should be found in swap")
-        && $market_order.is_market_maker)
+        || (!$market_pair
+          .is_selling(&$market_order)
+          .expect("market pair should be found in swap")
+          && $market_order.is_market_maker)
       {
         Err(SlippageError::OfferIsGreaterThanMarketMakerSwapUpperBound)
       } else {
@@ -159,8 +171,16 @@ mod tests {
           one_percent,
         );
 
-        let offer_base_amount = if $token_from == $market_pair.base_asset { $amount_from } else { $amount_to };
-        let offer_quote_amount = if $token_from == $market_pair.base_asset { $amount_to } else { $amount_from };
+        let offer_base_amount = if $token_from == $market_pair.base_asset {
+          $amount_from
+        } else {
+          $amount_to
+        };
+        let offer_quote_amount = if $token_from == $market_pair.base_asset {
+          $amount_to
+        } else {
+          $amount_from
+        };
 
         assert_swap_work!(
           market_order,
@@ -196,7 +216,7 @@ mod tests {
       quote_asset: Asset::USDCoin.currency_id(),
     }
   );
- 
+
   // BTC_ETH
   test!(
     slippage_5_dot_9_eth_to_0_dot_9_btc,
