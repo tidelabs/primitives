@@ -116,7 +116,7 @@ pub struct Swap<AccountId, BlockNumber> {
 #[derive(Eq, PartialEq, Encode, Decode, TypeInfo, MaxEncodedLen, Clone)]
 #[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
-pub struct MarketPair<CurrencyId> {
+pub struct MarketPair {
   /// Base asset of the swap market pair
   pub base_asset: CurrencyId,
   /// Quote asset of the swap market pair
@@ -142,7 +142,7 @@ pub enum SlippageError {
 impl<AccountId: Clone, BlockNumber: Clone> Swap<AccountId, BlockNumber> {
   pub fn pay_per_token_lower_bond(
     &self,
-    market_pair: &MarketPair<CurrencyId>,
+    market_pair: &MarketPair,
   ) -> Result<FixedU128, SlippageError> {
     if self.token_from == market_pair.base_asset {
       // selling
@@ -165,7 +165,7 @@ impl<AccountId: Clone, BlockNumber: Clone> Swap<AccountId, BlockNumber> {
 
   pub fn pay_per_token_upper_bond(
     &self,
-    market_pair: &MarketPair<CurrencyId>,
+    market_pair: &MarketPair,
   ) -> Result<FixedU128, SlippageError> {
     if self.token_to == market_pair.base_asset {
       // buying
@@ -190,7 +190,7 @@ impl<AccountId: Clone, BlockNumber: Clone> Swap<AccountId, BlockNumber> {
     &self,
     base_amount_closure: FT,
     quote_amount_closure: FF,
-    market_pair: &MarketPair<CurrencyId>,
+    market_pair: &MarketPair,
     base_amount: Balance,
     quote_amount: Balance,
   ) -> Result<FixedU128, SlippageError>
@@ -222,7 +222,7 @@ impl<AccountId: Clone, BlockNumber: Clone> Swap<AccountId, BlockNumber> {
   fn validate_slippage_dry_run(
     &self,
     price_offered: FixedU128,
-    market_pair: &MarketPair<CurrencyId>,
+    market_pair: &MarketPair,
   ) -> Result<(), SlippageError> {
     if self.token_to == market_pair.base_asset {
       // buyer should not accept a price greater than upper bound
@@ -260,7 +260,7 @@ impl<AccountId: Clone, BlockNumber: Clone> Swap<AccountId, BlockNumber> {
     market_maker_swap: &Swap<AccountId, BlockNumber>,
     offered_base_amount: Balance,
     offered_quote_amount: Balance,
-    market_pair: &MarketPair<CurrencyId>,
+    market_pair: &MarketPair,
   ) -> Result<(), SlippageError> {
     let base_asset: Asset = market_pair
       .base_asset
@@ -288,7 +288,7 @@ impl<AccountId: Clone, BlockNumber: Clone> Swap<AccountId, BlockNumber> {
   }
 }
 
-impl MarketPair<CurrencyId> {
+impl MarketPair {
   pub fn is_selling(&self, swap: &Swap<AccountId, BlockNumber>) -> Result<bool, SlippageError> {
     if swap.token_from == self.base_asset {
       Ok(true)
