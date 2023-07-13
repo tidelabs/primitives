@@ -17,7 +17,7 @@
 use sp_arithmetic::Permill;
 use std::str::FromStr;
 use tidefi_primitives::{
-  assert_swap_work, assets::Asset, AccountId, BlockNumber, SlippageError, Swap, SwapStatus,
+  assert_swap_work, assets::Asset, AccountId, BlockNumber, MarketPair, SlippageError, Swap, SwapStatus,
   SwapType,
 };
 const ALICE: &str = "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY";
@@ -72,7 +72,11 @@ fn run_one_swap(data: (u16, u16)) {
     market_order,
     limit_order,
     market_maker_amount_to_receive,
-    market_maker_amount_to_send
+    market_maker_amount_to_send,
+    MarketPair {
+      base_asset: Asset::Tdfy.currency_id(),
+      quote_asset: Asset::Bitcoin.currency_id(),
+    }
   );
 }
 
