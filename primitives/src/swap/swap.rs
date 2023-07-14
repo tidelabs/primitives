@@ -252,8 +252,8 @@ impl<AccountId: Clone, BlockNumber: Clone> Swap<AccountId, BlockNumber> {
   /// Validate slippage
   ///
   /// * `market_maker_swap` - Market maker (limit order) to test against.
-  /// * `market_maker_amount_to_receive` - Expected amount the limit order will receive against `market_maker_amount_to_send`.
-  /// * `market_maker_amount_to_send` - Expected amount the market order will receive against `market_maker_amount_to_receive`.
+  /// * `offered_base_amount` - Base asset amount in the offer
+  /// * `offered_quote_amount` - Quote asset amount in the offer
   /// * `market_pair` - Market pair that this swap belongs to
   pub fn validate_slippage(
     &self,
