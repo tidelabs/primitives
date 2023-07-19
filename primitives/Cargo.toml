@@ -1,7 +1,7 @@
 [package]
 name = "tidefi-primitives"
 authors = ["Semantic Network Team <publishers@tidelabs.org>"]
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 
 [dependencies]
