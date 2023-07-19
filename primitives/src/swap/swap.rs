@@ -113,8 +113,8 @@ pub struct Swap<AccountId, BlockNumber> {
 }
 
 /// Swap market pair details stored on-chain.
-#[derive(Eq, PartialEq, Encode, Decode, TypeInfo, MaxEncodedLen, Clone)]
-#[cfg_attr(feature = "std", derive(Debug, Serialize, Deserialize))]
+#[derive(Eq, PartialEq, Encode, Decode, Debug, TypeInfo, MaxEncodedLen, Clone)]
+#[cfg_attr(feature = "std", derive(Serialize, Deserialize))]
 #[cfg_attr(feature = "std", serde(rename_all = "camelCase"))]
 pub struct MarketPair {
   /// Base asset of the swap market pair
