@@ -122,10 +122,11 @@ impl Asset {
         ("mainnet", "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"),
       ]));
     } else if self == &Asset::AllTimeHigh {
-      return Some(str_map(vec![(
-        "local",
-        "0x8a791620dd6260079bf849dc5567adc3f2fdc318",
-      )]));
+      return Some(str_map(vec![
+        ("local", "0x8a791620dd6260079bf849dc5567adc3f2fdc318"),
+        ("testnet", "0xa6bf2a2181ef0779e86e73852f344d6cc52661ca"),
+        ("mainnet", "0x527c41d75bae7f992ae1d3179621a29df9255dc4"),
+      ]));
     }
     None
   }
