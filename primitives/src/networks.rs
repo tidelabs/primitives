@@ -172,8 +172,8 @@ impl Asset {
         ("local", true),
         ("devnet", true),
         ("staging", true),
-        ("testnet", false),
-        ("mainnet", false),
+        ("testnet", true),
+        ("mainnet", true),
       ]),
     }
   }
