@@ -127,6 +127,11 @@ impl Asset {
         ("testnet", "0xa6bf2a2181ef0779e86e73852f344d6cc52661ca"),
         ("mainnet", "0x527c41d75bae7f992ae1d3179621a29df9255dc4"),
       ]));
+    } else if self == &Asset::Tdfy {
+      return Some(str_map(vec![(
+        "local",
+        "0x610178da211fef7d417bc0e6fed39f05609ad788",
+      )]));
     }
     None
   }
