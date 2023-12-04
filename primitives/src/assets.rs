@@ -40,6 +40,7 @@ pub enum Asset {
   #[asset::name = "Tidefi Token"]
   #[asset::decimals = 12]
   #[asset::algo = "SR25519"]
+  #[asset::base_chain = "Ethereum"]
   #[asset::min_stake = 10_000_000_000_000]
   #[asset::max_stake = 500_000_000_000_000_000]
   Tdfy,
